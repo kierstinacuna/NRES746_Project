@@ -21,8 +21,10 @@ cat(
   # Likelihood
   
   for (i in 1:n.obs) {
-  exp_cover[i] <- 
-  cover_class[i] ~ dnbinom(data$cover_class, mu = exp_cover)
+  exp_cover[i] <- Use[Management[Manure[Moisture[i]]]] + b.a1 * A1[i]
+  
+  p_cover.class[i] ~ dnegbin(p = , r = )
+  
   }
   
   # Prior
