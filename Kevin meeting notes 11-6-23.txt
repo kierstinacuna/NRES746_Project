@@ -1,0 +1,7 @@
+include a way of hypothesis testing and p-values in ordination
+
+we don't have to go super under the hood, but any amount we can do would be great
+
+check that my function works properly
+
+display some way of calculating likelihood
