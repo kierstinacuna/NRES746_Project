@@ -1,0 +1,244 @@
+# Matrix algebra, very briefly
+
+Matrix algebra is well-suited for ecology, because most (if not all) _data sets_ we work with are in a _matrix_ format.
+
+## Data sets _are_ matrices
+
+Ecological data tables are obtained as object-observations or sampling units, and are often recorded as this: 
+
+| Objects | $y_1$     | $y_2$  | $\dots$           | $y_n$  |
+| :-------------: |:-------------:| :-----:|:-----:|:-----:|
+|  $x_1$        | $y_{1,1}$     | $y_{1,2}$  | $\dots$  | $y_{1,n}$  |
+|  $x_2$        | $y_{2,1}$     | $y_{2,2}$  | $\dots$  | $y_{2,n}$  |
+|  $\vdots$     | $\vdots$     | $\vdots$  | $\ddots$  | $\vdots$  |
+|  $x_m$        | $y_{m,1}$     | $y_{m,2}$  | $\dots$  | $y_{m,n}$  |
+
+where $x_m$ is the sampling unit $m$; and $y_n$ is the ecological descripor that can be, for example, species present in a sampling unit, locality, or a chemical variable.
+
+The same ecological data table can be represented in _matrix notation_ like this:
+
+$$Y = [y_{m,n}] =
+\begin{bmatrix}
+y_{1,1} & y_{1,2} & \cdots & y_{1,n} \\
+y_{2,1} & y_{2,2} & \cdots & y_{2,n} \\
+\vdots  & \vdots  & \ddots & \vdots  \\
+y_{m,1} & y_{m,2} & \cdots & y_{m,n} 
+\end{bmatrix}$$
+
+where lowercase letters indicate _elements_, and the subscript letters indicate the _position of these elements_ in the matrix (and in the table!).
+
+Moreover, any subset of a matrix can be recognized.
+
+We can subset _a row matrix_, as below:
+
+$$\begin{bmatrix}
+y_{1,1} & y_{1,2} & \cdots & y_{1,n} \\
+\end{bmatrix}$$
+
+We can also subset _a column matrix_, as below:
+
+$$\begin{bmatrix}
+y_{1,1} \\ y_{2,2} \\ \vdots \\ y_{m,2}
+\end{bmatrix}$$
+
+## Association matrices
+
+Two important matrices can be derived from the ecological data matrix: the _**association matrix among objects**_ and the _**association matrix among descriptors**_.
+
+Using the data from our matrix $Y$,
+
+<div class="math">
+\[ Y = 
+\begin{array}{cc}
+\begin{array}{ccc}
+x_1 \rightarrow\\
+x_2 \rightarrow\\
+\vdots \\
+x_m \rightarrow\\
+\end{array}
+&
+\begin{bmatrix}
+y_{1,1} & y_{1,2} & \cdots & y_{1,n} \\
+y_{2,1} & y_{2,2} & \cdots & y_{2,n} \\
+\vdots  & \vdots  & \ddots & \vdots  \\
+y_{m,1} & y_{m,2} & \cdots & y_{m,n} 
+\end{bmatrix}
+\end{array}
+\]
+</div>
+
+one can examine the relationship between the first two objects:
+
+<div class="math">
+\[x_1 \rightarrow \begin{bmatrix}
+y_{1,1} & y_{1,2} & \cdots & y_{1,n} \\
+\end{bmatrix}
+\]
+</div>
+
+<div class="math">
+\[x_2 \rightarrow 
+\begin{bmatrix}
+y_{2,1} & y_{2,2} & \cdots & y_{2,n} \\
+\end{bmatrix}
+\]
+</div>
+
+<p>and obtain \(a_{1,2}\). </p>
+
+
+We can populate the association matrix $A_{n,n}$ with the relationships between all objects from $Y$:
+
+<div class="math">
+\[A_{n,n} = 
+\begin{bmatrix}
+a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
+a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
+\vdots  & \vdots  & \ddots & \vdots  \\
+a_{n,1} & a_{n,2} & \cdots & a_{n,n} 
+\end{bmatrix}\]
+</div>
+
+<p>Because \(A_{n,n}\) has the same number of rows and columns, it is denoted a <i>square matrix</i>.</p> 
+
+<p>Therefore, \(A_{n,n}\) has \(n^2\) elements.</p>
+
+We can also obtain the relationship between the first two descriptors of $Y$, $y_1$ and $y_2$:
+
+$$\begin{bmatrix}
+y_{1,2} \\
+y_{2,2} \\
+\vdots  \\
+y_{m,2} 
+\end{bmatrix}$$
+
+$$\begin{bmatrix}
+y_{1,1} \\
+y_{2,1} \\
+\vdots  \\
+y_{m,1} 
+\end{bmatrix}$$
+
+and store it in $a_{1,2}$.
+
+We can populate the association matrix $A_{m,m}$ with the relationships between all descriptors from $Y$:
+
+$$A_{m,m} = 
+\begin{bmatrix}
+a_{1,1} & a_{1,2} & \cdots & a_{1,m} \\
+a_{2,1} & a_{2,2} & \cdots & a_{2,m} \\
+\vdots  & \vdots  & \ddots & \vdots  \\
+a_{m,1} & a_{m,2} & \cdots & a_{m,m} 
+\end{bmatrix}$$
+
+<p>This \(A_{m,m}\) is a <i>square matrix</i>, and it has \(m^2\) elements.</p>
+
+These matrices, \(A_{n,n}\) and \(A_{m,m}\), are the basis of **_Q-mode_** and **_R-mode_** analyses in ecology.
+
+**_R-mode_** constitutes of analyzing the association between descriptors or species, while **_Q-mode_** analyzes the association between OTUs, objects or sites.
+
+# Exploring the dataset
+
+We will use two main data sets in the first part of this workshop.
+
+They come from Verneaux's PhD thesis (1973), where he proposed to use fish species to characterize ecological zones along European rivers and streams.
+
+He collected data at **30 localities** along the Doubs river, which runs near the France-Switzerland border, in the Jura Mountains.
+
+He showed that fish communities were biological indicators of these water bodies.
+
+Their data is split in three matrices:
+
+1. The abundance of 27 fish species across the communities (`DoubsSpe.csv` and hereon, the `spe` object);
+2. The environmental variables recorded at each site (`DoubsEnv.csv` and hereon, the `env` object); and,
+3. The geographical coordinates of each site.
+
+Verneaux, J. (1973) _Cours d'eau de Franche-Comté (Massif du Jura). Recherches écologiques sur le réseau hydrographique du Doubs_. Essai de biotypologie. Thèse d'état, Besançon. 1–257.
+
+## Doubs river fish communities 
+
+You can download these datasets from [r.qcbs.ca/workshops/r-workshop-09](http://r.qcbs.ca/workshops/r-workshop-09/).
+
+We can load their data from the `data/` directory in this workshop:
+
+```{r}
+spe <- read.csv("data/doubsspe.csv", 
+                row.names = 1) 
+
+env <- read.csv("data/doubsenv.csv", 
+                row.names = 1)
+```
+
+Their data can also be retrieved from the `ade4` package:
+```{r eval=FALSE, echo = TRUE}
+library (ade4)
+data (doubs)
+
+spe <- doubs$fish
+env <- doubs$env
+```
+
+Alternatively, from the `codep` package:
+```{r eval = FALSE, echo = TRUE}
+library (codep)
+data (Doubs)
+
+spe <- Doubs.fish
+env <- Doubs.env
+```
+
+We can then explore the objects containing our newly loaded data. 
+
+Let us peek into the `spe` data:
+
+```{r, echo = T}
+head(spe)[, 1:8]
+```
+
+We can also use the `str()` function, which we learned in Workshops 1 and 2:
+
+```{r, echo = T, output.lines=1:8}
+str(spe)
+```
+
+You can also try some of these!
+
+```{r, echo = TRUE, eval = FALSE}
+# Try some of these!
+
+names(spe)   # names of objects
+dim(spe)     # dimensions
+
+str(spe)     # structure of objects
+summary(spe) # summary statistics
+
+head(spe)    # first 6 rows
+``` 
+
+## Doubs river environmental data
+
+```{r, echo = T}
+str(env)
+```
+
+It contains the following variables:
+
+|Variable |Description|
+|:--:|:--|
+|das|Distance from the source [km]  |
+|alt|Altitude [m a.s.l.]  |
+|pen|Slope [per thousand]  |
+|deb|Mean min. discharge [m<sup>3</sup>s<sup>-1</sup>]  |
+|pH|pH of water  |
+|dur|Ca conc. (hardness) [mgL<sup>-1</sup>]  |
+|pho|K conc. [mgL<sup>-1</sup>]  |
+|nit|N conc. [mgL<sup>-1</sup>]  |
+|amn|NH₄⁺ conc. [mgL<sup>-1</sup>]  |
+|oxy|Diss. oxygen [mgL<sup>-1</sup>]  |
+|dbo|Biol. oxygen demand [mgL<sup>-1</sup>]  |
+
+You can also use `summary()` to obtain summary statistics from the variables in `env`:
+
+```{r, eval = F}
+summary(env) # summary statistics
+```
