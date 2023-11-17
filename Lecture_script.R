@@ -27,18 +27,17 @@ summary(COGO_mod) #oxygen is significantly positive!
 
 ### Euclidean Distance ----
 
-# Simulate species abundance by site data set 
-Y.hmm <- data.frame(y1 = c(0, 0, 1), y2 = c(4, 1, 0),
-                    y3 = c(8, 1, 0), y4 = c(6, 0, 4))
+Y.hmm <- data.frame(hydrophillic_1 = c(1, 0, 0), hydrophillic_2 = c(1, 1, 0),
+                    mesic_1 = c(0, 1, 0), mesic_2 = c(0,4,0),
+                    xeric_1 = c(0, 1, 3),xeric_2 = c(0, 0, 2), 
+                    row.names = c("sample_1_wet", "sample_2_intermediate",
+                                                        "sample_3_dry"))
 
 # Calculate Euclidean distance using the dist() function
 (Y.hmm.DistEu <- dist(x = Y.hmm, method = "euclidean"))
 
-# Check the data type of the dist() function output
-class(Y.hmm.DistEu)
-
 # Coerce dist data type into a matrix
-(eu_dist_matrix <- as.matrix(Y.hmm.DistEu))
+(eu_dist_matrix_y.hmm <- as.matrix(Y.hmm.DistEu))
 
 # Calculate Euclidean Distance by Hand
 calc_eu_dist <- function(spe_abun_df) {
