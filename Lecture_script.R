@@ -6,6 +6,8 @@
 
 # Load libraries ----
 library(codep)
+library(vegan)
+library(datasets)
 
 # Load Doubs fish Data ----
 
@@ -19,7 +21,6 @@ vars <- as.data.frame(cbind(Doubs.env[-8,],Doubs.geo[-8,]))
 CHA.alt <- species$CHA + 1 #get rid of zeros to prep for log link
 COGO_mod <- glm(CHA.alt ~ pH + flo + oxy, data = vars, family = Gamma(link = "log"))
 summary(COGO_mod) #oxygen is significantly positive!
-
 
 # Dissimilarity Measures ----
 
@@ -73,9 +74,6 @@ calc_eu_dist <- function(spe_abun_df) {
 
 ### Breaking Down a PCA ----
 
-# Load the datasets package
-library(datasets)
-
 # Load the varechem dataset
 data(varechem)
 
@@ -86,7 +84,7 @@ data(varechem)
 data_std <- scale(data)
 
 # Compute the Covariance Matrix
-cov_matrix <- cov(data_std)
+(cov_matrix <- cov(data_std))
 
 # Perform the Eigendecomposition of the covariance matrix
 eigen_decomp <- eigen(cov_matrix)
