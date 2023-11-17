@@ -70,7 +70,7 @@ calc_eu_dist <- function(spe_abun_df) {
 
 ### Bray-Curtis Coefficient ----
 
-(Y.hmm.BCdist <- vegdist(Y.hmm, method = "bray", binary = FALSE))
+(Y.hmm.BCdist <- vegan::vegdist(Y.hmm, method = "bray", binary = FALSE))
 
 (Y.hmm.BCdist.matrix <- as.matrix(Y.hmm.BCdist))
 
@@ -78,7 +78,9 @@ calc_eu_dist <- function(spe_abun_df) {
 calc_bc_dist <- function(spe_abun_df) {
   
   # Create output matrix
-  output <- as.data.frame(matrix(NA, nrow = nrow(spe_abun_df), ncol = nrow(spe_abun_df)))
+  output <- as.data.frame(matrix(NA, nrow = nrow(spe_abun_df), ncol = nrow(spe_abun_df)),
+                          row.names = rownames(spe_abun_df))
+  colnames(output) <- rownames(spe_abun_df)
   
   # Index through the rows of the data frame
   for (i in 1:nrow(spe_abun_df)) {
