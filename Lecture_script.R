@@ -74,6 +74,54 @@ calc_eu_dist <- function(spe_abun_df) {
 
 (Y.hmm.BCdist.matrix <- as.matrix(Y.hmm.BCdist))
 
+# Calculate Bray-Curtis coefficient by hand
+calc_bc_dist <- function(spe_abun_df) {
+  
+  # Create output matrix
+  output <- as.data.frame(matrix(NA, nrow = nrow(spe_abun_df), ncol = nrow(spe_abun_df)))
+  
+  # Index through the rows of the data frame
+  for (i in 1:nrow(spe_abun_df)) {
+    
+    x1 <- spe_abun_df[i, ]
+    
+    for (t in 1:nrow(spe_abun_df)) {
+      
+      x2 <- spe_abun_df[t,]
+      
+      # Create empty data frame to find the minimum values of each species between two sites
+      comp_df <- as.data.frame(matrix(nrow = 2, ncol = ncol(spe_abun_df)))
+      
+      # Place the site values into the data frame
+      comp_df[1,] = x1
+      comp_df[2,] = x2
+      
+      # Find the minimum abundance values of each species and sum them.
+      min_abundances <- apply(comp_df, 2, min)
+      W <- sum(min_abundances)
+      
+      # Sum the abundances of site 1
+      A = sum(x1)
+      
+      # Sum the abundances of site 2
+      B = sum(x2)
+      
+      # Calculate the Bray-Curtis coefficient
+      bc_dist <- (1 - ((2 * W) / (A + B)))
+      
+      # Place the BC coefficient into the output data frame
+      output[i,t] <- bc_dist
+      
+    }
+    
+  }
+  # Return output
+  return(output)
+}
+
+calc_bc_dist(Y.hmm)
+
+
 # Unconstrained Ordination ----
 
 ## Principal Component Analysis ----
