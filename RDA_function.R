@@ -1,7 +1,3 @@
-# Set working directory ----
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-list.files()
-
 # Load Libraries ----
 
 library(codep)
@@ -36,14 +32,52 @@ summary(doubs_rda)
 # 47% of the variance is constrained, meaning 47% of the variance in Y is explained
 #   by the environmental variables in X
 
-ordiplot(doubs_rda, type = "text")
+doubs_rda$terminfo
 
+ordiplot(doubs_rda, type = "text")
+View(rda)
+methods(rda)
+getAnywhere(rda.default)
+getAnywhere(rda.formula)
 
 # Build RDA function ----
 
 x <- vars
 y <- species
 i=1
+
+y <- as.matrix(y)
+envcentre <- colMeans(x)
+x <- scale(x, center = envcentre, scale = FALSE)
+test2 <- model.matrix(~., as.data.frame(species))[,-1,drop=F]
+DISTBASED <- attr(y, "METHOD") == "DISTBASED"
+RW <- attr(y, "RW")
+CW <- attr(y, "CW")
+Q <- qr(x)
+?qr
+rank <- sum(Q$pivot[seq_len(Q$rank)] > 0)
+if (length(Q$pivot) > Q$rank){
+  alias <- colnames(Q$qr)[-seq_len(Q$rank)]}else{
+  alias <- NULL}
+kept <- seq_along(Q$pivot) <= Q$rank & Q$pivot > 0
+
+# So far, we've defined a bunch of null values, and centered and scaled x
+# Now, we do QR decomposition
+Yfit <- qr.fitted(qr(x), y)
+sol <- svd(Yfit)
+lambda <- sol$d^2
+u <- sol$u
+v <- sol$v
+## handle zero  eigenvalues and negative eigenvalues
+zeroev <- abs(lambda) < max(0, 0 * lambda[1L])
+if (any(zeroev)) {
+  lambda <- lambda[!zeroev]
+  u <- u[, !zeroev, drop = FALSE]}
+v <- v[, !zeroev, drop = FALSE]
+posev <- lambda > 0
+## wa scores
+wa <- y %*% v %*% diag(1/sqrt(lambda), sum(posev))
+
 
 rda_func <- function(x, y){
   # Step 1: Regress species in y over vars in x
@@ -54,16 +88,16 @@ rda_func <- function(x, y){
     preds[,i] <- mod$fitted.values
   }
   colnames(preds) <- colnames(y)
- summary(mod) 
   
   # Step 2: PCA on the fitted values
   pca <- prcomp(preds)
+  ordiplot(pca, type = "text")
   biplot(pca)
-  
+  pca$sdev
 }
 
 ## Test function ----
-
+rda_func(x, y)
 
 # Old function building on dune data
 # Inputs: x and y matrices
