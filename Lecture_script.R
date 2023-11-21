@@ -214,48 +214,29 @@ ss <- perp.segment.coord(Y_std$P, Y_std$N, line1)
 
 # 7. Loading Scores
 
-# Elements of each eigenvector are called loadings and can be interpreted as the contribution of each variable in the data set to 
-# the corresponding principal component, or as the coefficients of the linear combination of the original variables from which
-# the principal components are constructed.
+  # Elements of each eigenvector are called loadings and can be interpreted as the contribution of each variable in the data set to 
+  # the corresponding principal component, or as the coefficients of the linear combination of the original variables from which
+  # the principal components are constructed.
 
 # You can make a table with these values and see the contributions of each variable to each principal component:
-
-# Data frame with both eigenvectors
-
-loads <- data.frame(eig_vectors)
-colnames(loads) <- var_per$PC
-rownames(loads) <- c("N", "P")
-loads
-
-(loads <- data.frame(
+  
+  # Data frame with both eigenvectors
+loads <- data.frame(
   PC1 = eig_vec_1, # First eigenvector
   PC2 = eig_vec_2,  # Second eigenvector
   row.names = c("N", "P")
-))
+)
 
-ggplot(loads, aes(PC1, PC2)) +
-  geom_point(color = "blue", size = 2) +
-  geom_vline(xintercept = 0) +
-  geom_hline(yintercept = 0) +
-  geom_text(aes(label = rownames(loads)), hjust = -.2) +
-  ggtitle("Loadings for PC1 and PC2") +
-  theme_classic()
-
-# 5. Project the standardized data onto the Eigen-space
-
-F_PrComps <- data_std %*% eig_vectors
-head(F_PrComps)
-
-# Plot the Principal components relative to each other
-
-score <- as.data.frame(F_PrComps)
+  # Project the standardized data onto the Eigen-space
+scores <- as.data.frame(data_std %*% eig_vectors)
+colnames(scores) = c("PC1", "PC2")
 
 plot(loads, 
      xlim = c(-3,3), ylim = c(-3,3),
      col = "red")
 abline(v = 0, h = 0)
-points(score)
-with(score, text(PC2 ~ PC1, labels = as.factor(rownames(score)),pos = 1, cex=1))
+points(scores)
+with(scores, text(PC2 ~ PC1, labels = as.factor(rownames(scores)),pos = 1, cex=1))
 with(loads, text(PC2 ~ PC1, labels = as.factor(rownames(loads)),pos = 1, cex=1))
 
 
@@ -264,13 +245,11 @@ PCA_prcomp <- stats::prcomp(data, center = TRUE, scale = TRUE)
 
 PCA_prcomp$x
 
-PCA_prcomp$scale %*% PCA_prcomp
+PCA_prcomp$scale
 
 biplot(PCA_prcomp
        #, xlim = c(-2,2), ylim = c(-2,2)
        )
-
-# or PCA_prcomp <- prcomp(Y_std)
 
 (prcomp_scores <- PCA_prcomp$x)
 
@@ -455,21 +434,6 @@ title(xlab = "PC1",
 
 par(op)
 
-# Trying to plot the eigen vectors
-
-library("factoextra")
-get_pca_var
-
-
-plot(data_std[,1] ~ data_std[,2])
-
-ggplot(data.frame(data_set_2), aes(x = varc_1, y = varc_2)) +
-  geom_point(color = "blue", size = 2) +
-  geom_vline(xintercept = 0, size = .5) +
-  geom_hline(yintercept = 0, size = .5) +
-  geom_abline(slope = ev1_m, color = "blue", size = 0.7) +
-  geom_abline(slope = ev2_m, color = "red", size = 0.7) +
-  theme_classic()
 
 
 ### Using blackbox PCA functions ----
