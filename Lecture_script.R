@@ -187,6 +187,8 @@ barplot(PER ~ PC, data = var_per,
 
 # 6. Plot the Principal Components over the data
 
+  # Plot only the first Principal Component
+
   # Plot P against N to show first principal component
 plot(N ~ P, col = as.factor(rownames(data_std)), pch = 19,
      xlim=c(-2.2, 2.2), ylim = c(-2.2,2.2),
@@ -197,8 +199,8 @@ abline(v=0 , h=0,
 
   # Overlap pertinent eigenvector
 abline(0, eig_vec_1[2]/eig_vec_1[1], col='purple')
-arrows(x0 = 0, y0 = 0, x1 = eig_values[1]*eig_vec_1[1],y1 = eig_values[1]*eig_vec_1[2],
-       col = "purple", lwd = 2)
+#arrows(x0 = 0, y0 = 0, x1 = eig_values[1]*eig_vec_1[1],y1 = eig_values[1]*eig_vec_1[2],
+      # col = "purple", lwd = 2)
 
   # Plot the lines from first eigenvector to points
 line1 <- c(0, eig_vec_1[2]/eig_vec_1[1])
@@ -217,82 +219,121 @@ points(N ~ P, col = as.factor(rownames(data_std)), pch = 19, data = data_std)
 with(data_std, 
      text(N ~ P, labels = as.factor(rownames(data_std)), pos = 1, cex=1))
 
-# 7. Loading Scores
+title(main = "First Principal Component over the Standardized Data",
+      sub = "Purple Lines Horizontal to the First Principal Components is the Variance", cex.sub = 0.75)
+
+  # Plot both the first and second principal component
+
+  # Make another plot to show second principle component
+plot(N ~ P, col = as.factor(rownames(data_std)), pch = 19,
+     xlim=c(-2.2, 2.2), ylim = c(-2.2,2.2),
+     data = (data_std),
+     xlab = "P (Standardized)", ylab = "N (Standardized)")
+abline(v=0 , h=0, 
+       col = "dark gray")
+
+
+  #Overlap pertinent eigen-vectors
+abline(0, eig_vec_1[2]/eig_vec_1[1], col='purple')
+abline(0, eig_vec_2[2]/eig_vec_2[1], col='orange')
+#arrows(x0 = 0, y0 = 0, x1 = eig_values[1]*eig_vec_1[1],y1 = eig_values[1]*eig_vec_1[2],
+      # col = "purple", lwd = 2)
+#arrows(x0 = 0, y0 = 0, x1 = eig_values[2]*eig_vec_1[1], y1 = eig_values[2]*eig_vec_2[2],
+      # col = "orange", lwd = 2)
+
+line2 <- c(0, eig_vec_2[2]/eig_vec_2[1])
+
+perp.segment.coord <- function(x0, y0, line2){
+  a <- line2[1]  #intercept
+  b <- line2[2]  #slope
+  x1 <- (x0 + b * y0 - a * b)/(1 + b^2)
+  y1 <- a + b * x1
+  list(x0 = x0, y0 = y0, 
+       x1 = x1, y1 = y1)
+}
+ss <- perp.segment.coord(data_std[,2], data_std[,1], line2)
+
+segments(x0 = ss$x0, x1 = ss$x1, y0 = ss$y0, y1 = ss$y1,col = 'orange')
+
+with(data_std, text(N ~ P, labels = as.factor(rownames(data_std)),pos = 1, cex=1))
+
+title(main = "First (Purple) and Second (Orange) Principal Component over the Standardized Data",
+      sub = "Lines Horizontal to the Principal Components are the Variance", cex.sub = 0.75)
+
+
+# 7.Loading Scores
 
   # Elements of each eigenvector are called loadings and can be interpreted as the contribution of each variable in the data set to 
-  # the corresponding principal component, or as the coefficients of the linear combination of the original variables from which
-  # the principal components are constructed.
+  # the corresponding principal component.
 
-# You can make a table with these values and see the contributions of each variable to each principal component:
+  # You can make a table with these values and see the contributions of each variable to each principal component:
   
   # Data frame with both eigenvectors
-loads <- data.frame(
+variable.loads <- data.frame(
   PC1 = eig_vec_1, # First eigenvector
   PC2 = eig_vec_2,  # Second eigenvector
   row.names = c("N", "P")
 )
 
-  # Project the standardized data onto the Eigen-space
-scores <- as.data.frame(as.matrix(data_std) %*% eig_vectors)
-colnames(scores) = c("PC1", "PC2")
+  # You can also calculate the loading score for each site, which shows how they are placed in relation to the principal
+  # components.
 
-plot(loads, 
-     xlim = c(-2.5,2.5), ylim = c(-2.5,2.5),
-     col = "red", pch = 8)
+  # Project the standardized data onto the Eigen-space
+loading.scores <- as.data.frame(as.matrix(data_std) %*% eig_vectors)
+colnames(loading.scores) = c("PC1", "PC2")
+
+# 8. Make a biplot of the Principal Componants and Variable Loading Scores
+
+  # Set plot parameters
+par(
+  mar = c(5, 5, 10, 5) # space for one row of text at ticks and to separate plots
+)
+
+  # Plot the site loading scores
+plot(loading.scores, xlim = c(-2,2.5), ylim = c(-2,2.5),
+     col = as.factor(rownames(loading.scores)), pch = 19)
 abline(v = 0, col = "orange")
 abline(h = 0, col = "purple")
-points(scores, col = as.factor(rownames(scores)), pch = 19)
-with(scores, text(PC2 ~ PC1, labels = as.factor(rownames(scores)),pos = 1, cex=1))
-with(loads, text(PC2 ~ PC1, labels = as.factor(rownames(loads)),pos = 1, cex=1))
+with(loading.scores, text(PC2 ~ PC1, labels = as.factor(rownames(loading.scores)),pos = 1, cex=1))
 
+par(new=TRUE)
+
+  # Overlay the variable loading scores
+plot(variable.loads, 
+     xlim = c(-0.8, 1), ylim = c(-0.8,1),
+     col = "red", pch = 8, axes = F)
+axis(4, ylim = c(-1,1), col = "red")
+axis(3, xlim = c(-0.9,1), col = "red")
+mtext("Loading Scores",side=3,col="red",line=2.5)  
+mtext("Loading Scores",side=4,col="red",line=2.5)  
 # N
-arrows(x0 = 0, y0 = 0, x1 = loads[1,1],y1 = loads[1,2],
+arrows(x0 = 0, y0 = 0, x1 = variable.loads[1,1],y1 = variable.loads[1,2],
        col = "red", lwd = 1, length = 0.2)
 # P
-arrows(x0 = 0, y0 = 0, x1 = loads[2,1], y1 = loads[2,2],
+arrows(x0 = 0, y0 = 0, x1 = variable.loads[2,1], y1 = variable.loads[2,2],
        col = "red", lwd = 1, length = 0.2)
+with(variable.loads, text(PC2 ~ PC1, labels = as.factor(rownames(variable.loads)),pos = 1, cex=1,
+                 col = "red"))
+
+title(main = "Biplot of Site and Variable Loading Scores against the First and Second Principal Components")
 
 
-# Using stats::prcom()
-PCA_prcomp <- stats::prcomp(data, center = TRUE, scale = TRUE)
+### PCA analysis using built-in functions ----
 
-PCA_prcomp$x
+  # Using stats::prcom()
+PCA_prcomp <- stats::prcomp(data_std, center = TRUE, scale = TRUE)
 
-PCA_prcomp$scale
-
-biplot(PCA_prcomp
-       #, xlim = c(-2,2), ylim = c(-2,2)
-       )
+biplot(PCA_prcomp, scale = 0)
 abline(v = 0, h = 0)
 
-(prcomp_scores <- PCA_prcomp$x)
-
-# Using stats: princomp()
+  # Using stats: princomp()
 
 PCA_princomp <- stats::princomp(data_std)
 
-biplot(PCA_princomp)
+biplot(PCA_princomp, scale = 0)
 abline(v= 0, h = 0)
 
-head(PCA_princomp$scores)
 
-
-# 6. Represent the data in lower dimensions
-
-# Inverse of eigenvectors matrix
-(inv_eig_vec <- solve(eig_vectors))
-
-# Change the basis of the original data 
-(data_basis_changed <- data_std %*% inv_eig_vec)
-
-# Scatter showing the rotation 
-ggplot(data.frame(data_basis_changed), aes(X1, X2)) +
-  geom_point(color = "blue", size = 2) +
-  geom_vline(xintercept = 0, size = .5) +
-  geom_hline(yintercept = 0, size = .5) +
-  xlab("PC1 (62.56%)") +
-  ylab("PC2 (37.44%)") +
-  theme_classic()
 
 # 6. Plot the Eigenvectors and Eigenvalues in relation to the data
 plot_2pc <- function(eig_vec, eig_val, std_data) {
