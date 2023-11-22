@@ -111,6 +111,7 @@ selection
 ## Exercise 3 ----
 # Step 1: Use the rda function to run an rda on the variables selected in exercise 2
 rda_final <- rda(data$y ~ DFS + oxy + bdo + slo + Lat, data=data$x)
+summary(rda_final)
 
 # Step 2: Visualize the rda using the ordiplot function
 ordiplot(rda_final, type = "text")

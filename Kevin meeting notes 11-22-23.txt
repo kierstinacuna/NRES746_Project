@@ -1,0 +1,9 @@
+We're going to have p-values and R2 in the lab, make it clear in the intro that ordination can be used for both visualization and hypothesis testing
+
+Include info on how the first eigenvector explains the most possible variance
+
+We could give literature examples after explaining how to do a PCA plot rather than before. Could still have one example before, and another example later
+
+For ordiR2step, how exactly is it doing variable selection? It can't just be R2 because in that case it would choose all the variables. Also, can we do model selection without the black box?
+
+For the p-values, try to figure out what assumptions are being made
