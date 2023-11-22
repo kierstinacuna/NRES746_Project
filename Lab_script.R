@@ -51,7 +51,16 @@ selection <- ordiR2step(         )
 selection
 
 # Exercise 3 ----
+# Step 1: Use the rda function to run an rda on the variables selected in exercise 2
+rda_final <- rda(     )
 
+# Step 2: Visualize the rda using the ordiplot function
+ordiplot(     )
+
+# Step 3: Calculate the adjusted R-squared and p-values for the rda
+r2 <- RsquareAdj(     )
+
+p <- anova.cca(     )
 
 # Answers ----
 ## Exercise 1 ----
@@ -100,4 +109,13 @@ selection <- ordiR2step(object = rda_null, scope = rda_global)
 selection
 
 ## Exercise 3 ----
+# Step 1: Use the rda function to run an rda on the variables selected in exercise 2
+rda_final <- rda(data$y ~ DFS + oxy + bdo + slo + Lat, data=data$x)
 
+# Step 2: Visualize the rda using the ordiplot function
+ordiplot(rda_final, type = "text")
+
+# Step 3: Calculate the adjusted R-squared and p-values for the rda
+r2 <- RsquareAdj(rda_final)
+
+p <- anova.cca(rda_final, by="term")
