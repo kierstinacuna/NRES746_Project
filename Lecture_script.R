@@ -139,7 +139,7 @@ data(varechem)
 
 
 # 2. Standardize the data to have mean zero and unit variance:
-(data_std <- scale(data))
+(data_std <- as.data.frame(scale(data)))
 
 
 # 3. Compute the Covariance Matrix
@@ -201,7 +201,7 @@ arrows(x0 = 0, y0 = 0, x1 = eig_values[1]*eig_vec_1[1],y1 = eig_values[1]*eig_ve
        col = "purple", lwd = 2)
 
   # Plot the lines from first eigenvector to points
-line1 <- c(0, eig_vec[2, 1]/eig_vec[1, 1])
+line1 <- c(0, eig_vec_1[2]/eig_vec_1[1])
 perp.segment.coord <- function(x0, y0, line1){
   a <- line1[1]  #intercept 
   b <- line1[2]  #slope
@@ -210,7 +210,12 @@ perp.segment.coord <- function(x0, y0, line1){
   list(x0 = x0, y0 = y0, 
        x1 = x1, y1 = y1)
 }
-ss <- perp.segment.coord(Y_std$P, Y_std$N, line1)
+ss <- perp.segment.coord(data_std[,2], data_std[,1], line1)
+
+segments(x0 = ss$x0, x1 = ss$x1, y0 = ss$y0, y1 = ss$y1, col = 'purple')
+points(N ~ P, col = as.factor(rownames(data_std)), pch = 19, data = data_std)
+with(data_std, 
+     text(N ~ P, labels = as.factor(rownames(data_std)), pos = 1, cex=1))
 
 # 7. Loading Scores
 
@@ -228,16 +233,24 @@ loads <- data.frame(
 )
 
   # Project the standardized data onto the Eigen-space
-scores <- as.data.frame(data_std %*% eig_vectors)
+scores <- as.data.frame(as.matrix(data_std) %*% eig_vectors)
 colnames(scores) = c("PC1", "PC2")
 
 plot(loads, 
-     xlim = c(-3,3), ylim = c(-3,3),
-     col = "red")
-abline(v = 0, h = 0)
-points(scores)
+     xlim = c(-2.5,2.5), ylim = c(-2.5,2.5),
+     col = "red", pch = 8)
+abline(v = 0, col = "orange")
+abline(h = 0, col = "purple")
+points(scores, col = as.factor(rownames(scores)), pch = 19)
 with(scores, text(PC2 ~ PC1, labels = as.factor(rownames(scores)),pos = 1, cex=1))
 with(loads, text(PC2 ~ PC1, labels = as.factor(rownames(loads)),pos = 1, cex=1))
+
+# N
+arrows(x0 = 0, y0 = 0, x1 = loads[1,1],y1 = loads[1,2],
+       col = "red", lwd = 1, length = 0.2)
+# P
+arrows(x0 = 0, y0 = 0, x1 = loads[2,1], y1 = loads[2,2],
+       col = "red", lwd = 1, length = 0.2)
 
 
 # Using stats::prcom()
@@ -250,6 +263,7 @@ PCA_prcomp$scale
 biplot(PCA_prcomp
        #, xlim = c(-2,2), ylim = c(-2,2)
        )
+abline(v = 0, h = 0)
 
 (prcomp_scores <- PCA_prcomp$x)
 
@@ -258,6 +272,7 @@ biplot(PCA_prcomp
 PCA_princomp <- stats::princomp(data_std)
 
 biplot(PCA_princomp)
+abline(v= 0, h = 0)
 
 head(PCA_princomp$scores)
 
