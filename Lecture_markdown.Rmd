@@ -517,4 +517,4 @@ PCA_rda <- vegan::rda(data_std)
 biplot(PCA_rda)
 ```
 
-We can analyze these plots by remembering that our Principal components are linear combinations through our environmental variables. The first principal component(PC1) is most correlated with our phosphorus, ammonia, and oxygen variables, as they are all long the same axis. As we move negatively along PC1, we increase in ammonia and phosphorus, while simultaneously decreasing in oxygen. 
+We can analyze these plots by remembering that our Principal components are linear combinations through our environmental variables. The first principal component(PC1) is most correlated with our phosphorus, ammonia, and oxygen variables, as they are all long the same axisx. As we move negatively along PC1, we increase in ammonia and phosphorus, while simultaneously decreasing in oxygen. 
