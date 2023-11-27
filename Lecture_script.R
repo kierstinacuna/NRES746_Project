@@ -306,20 +306,15 @@ colnames(loading.scores) = c("PC01", "PC02", "PC03", "PC04", "PC05", "PC06")
 # 9. Make a biplot of the Principal Componants and Variable Loading Scores
 
   # Set plot parameters
-par( mar = c(5, 5, 10, 5),
+par(mar = c(5, 5, 10, 5),
      mgp = c(2, 1, 0))
 
 plot(loading.scores[,2] ~ loading.scores[,1], 
-     xlab = 'PC1', ylab = "PC2",
-     xlim = c(-8,8),
-     ylim = c(-8,8),
-     col = as.factor(rownames(loading.scores)), pch = 19,
+     xlab = 'PC1', ylab = "PC2",xlim = c(-8,8),ylim = c(-8,8),col = as.factor(rownames(loading.scores)), pch = 19,
      main = "Biplot of Site and Variable Loading Scores Against the First and Second Principal Components")
-
 abline(v = 0, col = "orange")
 abline(h = 0, col = "purple")
 with(loading.scores, text(PC02 ~ PC01, labels = as.factor(rownames(loading.scores)),pos = 1, cex=1))
-
 
 par(new=TRUE)
 
@@ -332,42 +327,19 @@ axis(4, ylim = c(-1,1), col = "red")
 axis(3, xlim = c(-0.9,1), col = "red")
 mtext("Loading Scores",side=3,col="red",line=2.5)  
 mtext("Loading Scores",side=4,col="red",line=2.5)  
-
 for (i in 1:nrow(variable.loads)) {
   arrows(x0 = 0, y0 = 0, x1 = variable.loads[i,1],y1 = variable.loads[i,2],
          col = "red", lwd = 1, length = 0.1)
 }
-
 with(variable.loads, text(PC02 ~ PC01, labels = as.factor(rownames(variable.loads)),pos = 1, cex=1,
                  col = "red"))
-
 title(main = "Biplot of Site and Variable Loading Scores against the First and Second Principal Components")
-
 
 ### PCA analysis using built-in functions ----
 
-par(
-  mar = c(5, 4, 4, 2) + 0.1,
-  mgp = c(3, 1, 0)
-)
-
-  # Using stats::prcomp()
-PCA_prcomp <- stats::prcomp(data_std, center = TRUE, scale = T)
-
-biplot(PCA_prcomp, scale = 0, xlim = c(-8, 8), ylim = c(-8, 8)
-       )
-abline(v = 0, h = 0)
+par( mar = c(5, 4, 4, 2) + 0.1,mgp = c(3, 1, 0))
 
   # Using stats: princomp()
-
 PCA_princomp <- stats::princomp(data_std)
-summary(PCA_princomp)
-
 biplot(PCA_princomp)
 abline(v= 0, h = 0)
-
-  # Using the vegan::rda() function
-
-PCA_rda <- vegan::rda(data_std)
-biplot(PCA_rda)
-

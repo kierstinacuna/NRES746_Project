@@ -402,7 +402,7 @@ broken_stick <- function(eig_values) {
 broken_stick(eig_values)
 ```
 
-# 7. Plot the Principal Components over the data
+7. Plot the Principal Components over the data
 
 ``` {r}
   # Plot only the first two Principal Components
@@ -499,22 +499,14 @@ with(variable.loads, text(PC02 ~ PC01, labels = as.factor(rownames(variable.load
 title(main = "Biplot of Site and Variable Loading Scores against the First and Second Principal Components", cex.main = 0.75)
 ```
 
-PCA analysis using built-in functions
+PCA analysis using the princomp() function
 
 ``` {r}
-  # Using stats::prcomp()
-PCA_prcomp <- stats::prcomp(data_std, center = TRUE, scale = T)
-biplot(PCA_prcomp, scale = 0, xlim = c(-8, 8), ylim = c(-8, 8))
-abline(v = 0, h = 0)
-
   # Using stats: princomp()
 PCA_princomp <- stats::princomp(data_std)
 biplot(PCA_princomp)
 abline(v= 0, h = 0)
-
-  # Using the vegan::rda() function
-PCA_rda <- vegan::rda(data_std)
-biplot(PCA_rda)
 ```
 
-We can analyze these plots by remembering that our Principal components are linear combinations through our environmental variables. The first principal component(PC1) is most correlated with our phosphorus, ammonia, and oxygen variables, as they are all long the same axisx. As we move negatively along PC1, we increase in ammonia and phosphorus, while simultaneously decreasing in oxygen. 
+We can analyze these plots by remembering that our Principal components are linear combinations through our environmental variables. The first principal component(PC1) is most correlated with our phosphorus, ammonia, and oxygen variables, as they are all long the same axis. As we move negatively along PC1, we increase in ammonia and phosphorus, while simultaneously decreasing in oxygen. Therefore, PC1 is summarizing these environmental variables, and can be used as explanatory variables in other analyses. An important thing to remember is that principal components are latent variables, and you have to remember that when interpreting them, you have to know how they related to the original variables.
+
