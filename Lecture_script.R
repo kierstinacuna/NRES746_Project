@@ -15,6 +15,8 @@ data(Doubs)
 species <- as.data.frame(Doubs.fish[-8,])
 vars <- as.data.frame(cbind(Doubs.env[-8,],Doubs.geo[-8,]))
 
+?Doubs
+
 # GLM example ----
 # Cottus gobio gamma distributed model
 
@@ -28,38 +30,27 @@ summary(COGO_mod) #oxygen is significantly positive!
 
 ### Euclidean Distance ----
 
-Y.hmm <- data.frame(hydrophillic_1 = c(1, 0, 0), hydrophillic_2 = c(1, 1, 0),
+(Y.hmm <- data.frame(hydrophillic_1 = c(1, 0, 0), hydrophillic_2 = c(1, 1, 0),
                     mesic_1 = c(0, 1, 0), mesic_2 = c(0,4,0),
                     xeric_1 = c(0, 1, 3),xeric_2 = c(0, 0, 2), 
                     row.names = c("sample_1_wet", "sample_2_intermediate",
-                                                        "sample_3_dry"))
+                                                        "sample_3_dry")))
 
 # Calculate Euclidean distance using the dist() function
-(Y.hmm.DistEu <- dist(x = Y.hmm, method = "euclidean"))
-
-# Coerce dist data type into a matrix
-(eu_dist_matrix_y.hmm <- as.matrix(Y.hmm.DistEu))
+(Y.hmm.DistEu <- as.matrix(dist(x = Y.hmm, method = "euclidean")))
 
 # Calculate Euclidean Distance by Hand
 calc_eu_dist <- function(spe_abun_df) {
-  
   # Create output matrix
   output <- as.data.frame(matrix(NA, nrow = nrow(spe_abun_df), ncol = nrow(spe_abun_df)))
-  
   # Index through the rows of the data frame
   for (i in 1:nrow(spe_abun_df)) {
-    
     x1 <- spe_abun_df[i, ]
-    
     for (t in 1:nrow(spe_abun_df)) {
-      
       x2 <- spe_abun_df[t,]
-      
       # Calculate euclidean distance and place distance into output data frame
       output[i,t] <- sqrt(sum((x1 - x2)^2))
-      
     }
-    
   }
   # Return output
   return(output)
@@ -76,51 +67,38 @@ calc_eu_dist <- function(spe_abun_df) {
 
 # Calculate Bray-Curtis coefficient by hand
 calc_bc_dist <- function(spe_abun_df) {
-  
   # Create output matrix
   output <- as.data.frame(matrix(NA, nrow = nrow(spe_abun_df), ncol = nrow(spe_abun_df)),
                           row.names = rownames(spe_abun_df))
   colnames(output) <- rownames(spe_abun_df)
-  
   # Index through the rows of the data frame
   for (i in 1:nrow(spe_abun_df)) {
-    
     x1 <- spe_abun_df[i, ]
-    
     for (t in 1:nrow(spe_abun_df)) {
-      
       x2 <- spe_abun_df[t,]
-      
       # Create empty data frame to find the minimum values of each species between two sites
       comp_df <- as.data.frame(matrix(nrow = 2, ncol = ncol(spe_abun_df)))
-      
       # Place the site values into the data frame
       comp_df[1,] = x1
       comp_df[2,] = x2
-      
       # Find the minimum abundance values of each species and sum them.
       min_abundances <- apply(comp_df, 2, min)
       W <- sum(min_abundances)
-      
       # Sum the abundances of site 1
       A = sum(x1)
-      
       # Sum the abundances of site 2
       B = sum(x2)
-      
       # Calculate the Bray-Curtis coefficient
       bc_dist <- (1 - ((2 * W) / (A + B)))
-      
       # Place the BC coefficient into the output data frame
       output[i,t] <- bc_dist
-      
     }
-    
   }
   # Return output
   return(output)
 }
 
+# Run Bray-Curtis coefficient by hand function
 calc_bc_dist(Y.hmm)
 
 
@@ -133,17 +111,11 @@ calc_bc_dist(Y.hmm)
 ### Breaking Down a PCA ----
 
 
-# 1.  Load the varechem dataset
-
-# Change the data set (Doubs)
-
-data(varechem)
-(data <- varechem[, 1:2]) # Select the Nitrogen and Phosphous data columns
-
+# 1.  Load the dataset
+data <- Doubs.env[,3:8]
 
 # 2. Standardize the data to have mean zero and unit variance:
 (data_std <- as.data.frame(scale(data)))
-
 
 # 3. Compute the Covariance Matrix
 (cov_matrix <- cov(data_std))
@@ -160,16 +132,17 @@ eigen_decomp <- eigen(cov_matrix)
 
 
 # Extract Eigenvectors
-(eig_vectors <- -eigen_decomp$vectors)
-
-
-# Extract the first and second eigenvectors, which correspond in this case to N and P respectively
+(eig_vectors <- eigen_decomp$vectors)
+rownames(eig_vectors) = colnames(data_std)
+colnames(eig_vectors) = c("EV1", "EV2", "EV3", "EV4", "EV5", "EV6")
+                          
+# Extract the first two eigenvectors
 eig_vec_1 <- eig_vectors[,1]
 eig_vec_2 <- eig_vectors[,2]
 
 
-# Note that the first two eigenvectors are perpendicular since the first eigenvector accounts for most of the variance in the data
-# and the second eigenvector is orthogonal to the first eigenvector:
+# Note that the first two eigenvectors are perpendicular since the first eigenvector accounts
+# for most of the variance in the data and the second eigenvector is orthogonal to the first eigenvector:
 eig_vec_1 %*% eig_vec_2
 
 
@@ -180,7 +153,7 @@ eig_vec_1 %*% eig_vec_2
 
   # Data frame with variance percentages
 var_per <- data.frame(
-  PC  = c("PC1", "PC2"),
+  PC  = c("PC01", "PC02", "PC03", "PC04", "PC05", "PC06"),
   PER = c(e_var) * 100 / sum(e_var) # Calculate the percentage
 )
   # Scree plot to show amount of variance accounted by each principal component
@@ -188,22 +161,73 @@ barplot(PER ~ PC, data = var_per,
         xlab = "Principal Components",
         ylab = "Percent of Variation %")
 
-# 6. Plot the Principal Components over the data
+# 6. Selecting Principal Components 
 
-  # Plot only the first Principal Component
+  # Kaiser-Guttman Criterion
+  # It is generally a good idea to select the principal components that explain most of
+  # the variance in the data. One criterion is the Kaiser-Guttman Criterion, which states
+  # that any eigenvector with an eigenvalue greater than 1 should be retained.
 
-  # Plot P against N to show first principal component
-plot(N ~ P, col = as.factor(rownames(data_std)), pch = 19,
-     xlim=c(-2.2, 2.2), ylim = c(-2.2,2.2),
+eig_val_PC <- data.frame(
+  PC = c("PC01", "PC02", "PC03", "PC04", "PC05", "PC06"),
+  EV = eig_values
+)
+
+barplot(EV ~ PC, data = eig_val_PC,
+        xlab = "Principal Components",
+        ylab = "Eigenvalues"
+        )
+abline(h = 1, col = "red")
+
+  # Broken stick Model
+  # A. Jackson (1993) says that the broken-stick method is one of the better methods for 
+  # choosing the number of PCs. The method provides "a good combination of simplicity of 
+  # calculation and accurate evaluation of dimensionality relative to the other statistical 
+  # approaches" (p. 2212)
+  # the "expected proportions" as corresponding to a null model that contains uncorrelated
+  # (noise) variables. If you plot the eigenvalues of the correlation matrix against the 
+  # broken-stick proportions, the observed proportions that are higher than the expected 
+  # proportions indicate which principal components to keep.
+  # Fall on conservative side of Principal Component selections.
+
+broken_stick <- function(eig_values) {
+  # Calculate Broken Stick Model
+  n = length(eig_values)
+  bsm = data.frame(j=seq(1:n), prop_var=0)
+  bsm$prop_var[1] = 1/n
+  for (i in 2:n) {
+    bsm$prop_var[i] = bsm$prop_var[i-1] + (1/(n + 1 - i))
+    }
+  bsm$prop_var = 100*bsm$prop_var/n
+  
+  # Plot Broken Stick Modol Over 
+  barplot(t(cbind(100*eig_values/sum(eig_values), bsm$p[n:1])),
+        beside=TRUE, 
+        main="Broken Stick Model",
+        col=c("red","blue"),
+        las=2,
+        xlab = "Principal Components", ylab = "Percent of Variation (%)")
+  legend("topright", c("Eigenvalues", "Broken stick model"), 
+         pch=15,
+         col=c("red","blue"), 
+         bty="n")
+
+}
+
+broken_stick(eig_values)
+
+# 7. Plot the Principal Components over the data
+
+  # Plot only the first two Principal Components
+plot(har ~ pH, col = as.factor(rownames(data_std)), pch = 19,
+     xlim=c(-4, 4), ylim = c(-4,4),
      data = (data_std),
-     xlab = "P (Standardized)", ylab = "N (Standardized)")
+     xlab = "pH (Standardized)", ylab = "har (Standardized)")
 abline(v=0 , h=0, 
        col = "dark gray")
 
   # Overlap pertinent eigenvector
 abline(0, eig_vec_1[2]/eig_vec_1[1], col='purple')
-#arrows(x0 = 0, y0 = 0, x1 = eig_values[1]*eig_vec_1[1],y1 = eig_values[1]*eig_vec_1[2],
-      # col = "purple", lwd = 2)
 
   # Plot the lines from first eigenvector to points
 line1 <- c(0, eig_vec_1[2]/eig_vec_1[1])
@@ -215,12 +239,10 @@ perp.segment.coord <- function(x0, y0, line1){
   list(x0 = x0, y0 = y0, 
        x1 = x1, y1 = y1)
 }
-ss <- perp.segment.coord(data_std[,2], data_std[,1], line1)
-
+ss <- perp.segment.coord(data_std[,1], data_std[,2], line1)
 segments(x0 = ss$x0, x1 = ss$x1, y0 = ss$y0, y1 = ss$y1, col = 'purple')
-points(N ~ P, col = as.factor(rownames(data_std)), pch = 19, data = data_std)
 with(data_std, 
-     text(N ~ P, labels = as.factor(rownames(data_std)), pos = 1, cex=1))
+     text(har ~ pH, labels = as.factor(rownames(data_std)), pos = 1, cex=1))
 
 title(main = "First Principal Component over the Standardized Data",
       sub = "Purple Lines Horizontal to the First Principal Components is the Variance", cex.sub = 0.75)
@@ -228,10 +250,10 @@ title(main = "First Principal Component over the Standardized Data",
   # Plot both the first and second principal component
 
   # Make another plot to show second principle component
-plot(N ~ P, col = as.factor(rownames(data_std)), pch = 19,
-     xlim=c(-2.2, 2.2), ylim = c(-2.2,2.2),
+plot(har ~ pH, col = as.factor(rownames(data_std)), pch = 19,
+     xlim=c(-4, 4), ylim = c(-4,4),
      data = (data_std),
-     xlab = "P (Standardized)", ylab = "N (Standardized)")
+     xlab = "pH (Standardized)", ylab = "har (Standardized)")
 abline(v=0 , h=0, 
        col = "dark gray")
 
@@ -239,11 +261,8 @@ abline(v=0 , h=0,
   #Overlap pertinent eigen-vectors
 abline(0, eig_vec_1[2]/eig_vec_1[1], col='purple')
 abline(0, eig_vec_2[2]/eig_vec_2[1], col='orange')
-#arrows(x0 = 0, y0 = 0, x1 = eig_values[1]*eig_vec_1[1],y1 = eig_values[1]*eig_vec_1[2],
-      # col = "purple", lwd = 2)
-#arrows(x0 = 0, y0 = 0, x1 = eig_values[2]*eig_vec_1[1], y1 = eig_values[2]*eig_vec_2[2],
-      # col = "orange", lwd = 2)
 
+# Plot the lines from first eigenvector and second to points
 line2 <- c(0, eig_vec_2[2]/eig_vec_2[1])
 
 perp.segment.coord <- function(x0, y0, line2){
@@ -254,68 +273,72 @@ perp.segment.coord <- function(x0, y0, line2){
   list(x0 = x0, y0 = y0, 
        x1 = x1, y1 = y1)
 }
-ss <- perp.segment.coord(data_std[,2], data_std[,1], line2)
+ss <- perp.segment.coord(data_std[,1], data_std[,2], line2)
 
 segments(x0 = ss$x0, x1 = ss$x1, y0 = ss$y0, y1 = ss$y1,col = 'orange')
 
-with(data_std, text(N ~ P, labels = as.factor(rownames(data_std)),pos = 1, cex=1))
+with(data_std, text(har ~ pH, labels = as.factor(rownames(data_std)),pos = 1, cex=1))
 
 title(main = "First (Purple) and Second (Orange) Principal Component over the Standardized Data",
       sub = "Lines Horizontal to the Principal Components are the Variance", cex.sub = 0.75)
 
 
-# 7.Loading Scores
+# 8.Loading Scores
 
   # Elements of each eigenvector are called loadings and can be interpreted as the contribution of each variable in the data set to 
   # the corresponding principal component.
 
   # You can make a table with these values and see the contributions of each variable to each principal component:
   
-  # Data frame with both eigenvectors
+  # Get variable loading scores
 variable.loads <- data.frame(
-  PC1 = eig_vec_1, # First eigenvector
-  PC2 = eig_vec_2,  # Second eigenvector
-  row.names = c("N", "P")
+  PC01 = eig_vec_1, # First eigenvector
+  PC02 = eig_vec_2  # Second eigenvector
 )
 
   # You can also calculate the loading score for each site, which shows how they are placed in relation to the principal
   # components.
 
-  # Project the standardized data onto the Eigen-space
+  # Calculate site loading scores
 loading.scores <- as.data.frame(as.matrix(data_std) %*% eig_vectors)
-colnames(loading.scores) = c("PC1", "PC2")
+colnames(loading.scores) = c("PC01", "PC02", "PC03", "PC04", "PC05", "PC06")
 
-# 8. Make a biplot of the Principal Componants and Variable Loading Scores
+# 9. Make a biplot of the Principal Componants and Variable Loading Scores
 
   # Set plot parameters
-par(
-  mar = c(5, 5, 10, 5) # space for one row of text at ticks and to separate plots
-)
+par( mar = c(5, 5, 10, 5),
+     mgp = c(2, 1, 0))
 
-  # Plot the site loading scores
-plot(loading.scores, xlim = c(-2,2.5), ylim = c(-2,2.5),
-     col = as.factor(rownames(loading.scores)), pch = 19)
+plot(loading.scores[,2] ~ loading.scores[,1], 
+     xlab = 'PC1', ylab = "PC2",
+     xlim = c(-8,8),
+     ylim = c(-8,8),
+     col = as.factor(rownames(loading.scores)), pch = 19,
+     main = "Biplot of Site and Variable Loading Scores Against the First and Second Principal Components")
+
 abline(v = 0, col = "orange")
 abline(h = 0, col = "purple")
-with(loading.scores, text(PC2 ~ PC1, labels = as.factor(rownames(loading.scores)),pos = 1, cex=1))
+with(loading.scores, text(PC02 ~ PC01, labels = as.factor(rownames(loading.scores)),pos = 1, cex=1))
+
 
 par(new=TRUE)
 
   # Overlay the variable loading scores
-plot(variable.loads, 
+plot(PC02 ~ PC01, 
      xlim = c(-0.8, 1), ylim = c(-0.8,1),
-     col = "red", pch = 8, axes = F)
+     col = "red", pch = 8, axes = F, xlab = "", ylab = "",
+     data = variable.loads)
 axis(4, ylim = c(-1,1), col = "red")
 axis(3, xlim = c(-0.9,1), col = "red")
 mtext("Loading Scores",side=3,col="red",line=2.5)  
 mtext("Loading Scores",side=4,col="red",line=2.5)  
-# N
-arrows(x0 = 0, y0 = 0, x1 = variable.loads[1,1],y1 = variable.loads[1,2],
-       col = "red", lwd = 1, length = 0.2)
-# P
-arrows(x0 = 0, y0 = 0, x1 = variable.loads[2,1], y1 = variable.loads[2,2],
-       col = "red", lwd = 1, length = 0.2)
-with(variable.loads, text(PC2 ~ PC1, labels = as.factor(rownames(variable.loads)),pos = 1, cex=1,
+
+for (i in 1:nrow(variable.loads)) {
+  arrows(x0 = 0, y0 = 0, x1 = variable.loads[i,1],y1 = variable.loads[i,2],
+         col = "red", lwd = 1, length = 0.1)
+}
+
+with(variable.loads, text(PC02 ~ PC01, labels = as.factor(rownames(variable.loads)),pos = 1, cex=1,
                  col = "red"))
 
 title(main = "Biplot of Site and Variable Loading Scores against the First and Second Principal Components")
@@ -323,387 +346,28 @@ title(main = "Biplot of Site and Variable Loading Scores against the First and S
 
 ### PCA analysis using built-in functions ----
 
-  # Using stats::prcomp()
-PCA_prcomp <- stats::prcomp(data_std, center = TRUE, scale = TRUE)
+par(
+  mar = c(5, 4, 4, 2) + 0.1,
+  mgp = c(3, 1, 0)
+)
 
-biplot(PCA_prcomp, scale = 0)
+  # Using stats::prcomp()
+PCA_prcomp <- stats::prcomp(data_std, center = TRUE, scale = T)
+
+biplot(PCA_prcomp, scale = 0, xlim = c(-8, 8), ylim = c(-8, 8)
+       )
 abline(v = 0, h = 0)
 
   # Using stats: princomp()
 
 PCA_princomp <- stats::princomp(data_std)
+summary(PCA_princomp)
 
-biplot(PCA_princomp, scale = 0)
+biplot(PCA_princomp)
 abline(v= 0, h = 0)
 
+  # Using the vegan::rda() function
 
+PCA_rda <- vegan::rda(data_std)
+biplot(PCA_rda)
 
-# 6. Plot the Eigenvectors and Eigenvalues in relation to the data
-plot_2pc <- function(eig_vec, eig_val, std_data) {
-  # Set Up Data and empty vectors
-  eig_vec. <- as.data.frame(eig_vec)
-  row.names(eig_vec.) <- c("P", "N")
-  colnames(eig_vec.) <- c("PC1", "PC2")
-  eig_vec.[, 1] <- eig_vec.[, 1]*-1
-  Y_std <- as.data.frame(std_data)
-  
-  # Set Plotting Parameters
-  op <- par(mfrow = c(2, 1),     # 2x2 layout
-            oma = c(2, 2, 0, 0), # two rows of text at the outer left and bottom margin
-            mar = c(3, 3, 0, 0), # space for one row of text at ticks and to separate plots
-            mgp = c(2, 1, 0)    # axis label at 2 rows distance, tick labels at 1 row
-  )       
-  
-  # Plot P against N to show first principal component
-  plot(N ~ P, col = as.factor(rownames(Y_std)), pch = 19, xlim=c(-2.2, 2.2), 
-       ylim = c(-2.2,2.2), data = as.data.frame(Y_std),
-       xlab = "P (Standardized)", ylab = "N (Standardized)")
-  abline(v=0 , h=0, 
-         col = "dark gray")
-  
-  # Overlap pertinent eigenvector
-  abline(0, eig_vec[2, 1]/eig_vec[1, 1], col='purple')
-  arrows(x0 = 0, y0 = 0, x1 = eig_val[1]*eig_vec[1, 1],y1 = eig_val[1]*eig_vec[2, 1],
-         col = "purple", lwd = 2)
-  
-  # Plot the lines from first eigenvector to points
-  line1 <- c(0, eig_vec[2, 1]/eig_vec[1, 1])
-  perp.segment.coord <- function(x0, y0, line1){
-    a <- line1[1]  #intercept 
-    b <- line1[2]  #slope
-    x1 <- (x0 + b * y0 - a * b)/(1 + b^2)
-    y1 <- a + b * x1
-    list(x0 = x0, y0 = y0, 
-         x1 = x1, y1 = y1)
-  }
-  ss <- perp.segment.coord(Y_std$P, Y_std$N, line1)
-  
-  # do.call(segments, ss)
-  # which is the same as:
-  segments(x0 = ss$x0, x1 = ss$x1, y0 = ss$y0, y1 = ss$y1, col = 'purple')
-  points(N ~ P, col = as.factor(rownames(Y_std)), pch = 19, data = Y_std)
-  with(Y_std, 
-       text(N ~ P, labels = as.factor(rownames(Y_std)), pos = 1, cex=1.4))
-  
-  # Make another plot to show second principle component
-  plot(N ~ P, col = as.factor(rownames(Y_std)), pch = 19, xlim=c(-2.2, 2.2), 
-       ylim = c(-2.2,2.2), data = as.data.frame(Y_std))
-  abline(v=0 , h=0, col = "dark gray")
-  
-  #Overlap pertinent eigen-vectors
-  abline(0, eig_vec[2, 1]/eig_vec[1, 1], col='purple')
-  abline(0, eig_vec[1, 2]/eig_vec[2, 2], col='orange')
-  
-  arrows(x0 = 0, y0 = 0, x1 = eig_val[1]*eig_vec[1, 1], y1 = eig_val[1]*eig_vec[2, 1], col = "purple", lwd = 2)
-  
-  arrows(x0 = 0,y0 = 0, x1 = eig_val[2]*eig_vec[1,2], y1 = eig_val[2]*eig_vec[2, 2], col = "orange", lwd = 2)
-  
-  line2 <- c(0, eig_vec[1, 2]/eig_vec[1, 1])
-  
-  perp.segment.coord <- function(x0, y0, line2){
-    a <- line2[1]  #intercept
-    b <- line2[2]  #slope
-    x1 <- (x0 + b * y0 - a * b)/(1 + b^2)
-    y1 <- a + b * x1
-    list(x0 = x0, y0 = y0, 
-         x1 = x1, y1 = y1)
-  }
-  ss <- perp.segment.coord(Y_std$P, Y_std$N, line2)
-  
-  segments(x0 = ss$x0, x1 = ss$x1, y0 = ss$y0, y1 = ss$y1,col = 'orange')
-  
-  points(N ~ P, col = as.factor(rownames(Y_std)), pch = 19, data = Y_std)
-  
-  with(Y_std, text(N ~ P, labels = as.factor(rownames(Y_std)),pos = 1, cex=1.4))
-  
-  title(xlab = "N",ylab = "P", outer = TRUE, line = 3)
-}
-
-plot_2pc(Eigenvectors, Eigenvalues, data_std)
-
-# 5. Project the standardized data onto the Eigen-space
-F_PrComps <- data_std %*% eig_vectors
-head(F_PrComps)
-
-
-# Plot the Principal components relative to each other
-
-score <- as.data.frame(F_PrComps)
-
-colnames(score) <- c("PC1", "PC2")
-
-op <- par(mfrow = c(2, 1),     # 2x2 layout
-          oma = c(2, 2, 0, 0), # two rows of text at the outer left and bottom margin
-          mar = c(1, 1, 0, 0), # space for one row of text at ticks and to separate plots
-          mgp = c(2, 1, 0)    # axis label at 2 rows distance, tick labels at 1 row
-)
-
-
-plot(PC2 ~ PC1, 
-     col = as.factor(rownames(score)), 
-     pch = 19, 
-     xlim = c(-2.2, 2.2), ylim = c(-2.2,2.2), xlab='PC1', ylab='PC2',data = score)
-
-abline(h = 0, col = 'purple')
-abline(v = 0, col='orange')
-
-
-perp.segment.horiz <- function(x0, y0){
-  x1 <- x0
-  y1 <- 0
-  list(x0 = x0, y0 = y0, x1 = x1, y1 = y1)
-}
-
-ss1 <- perp.segment.horiz(score[,1], score[,2])
-
-segments(x0 = ss1$x0, x1 = ss1$x1, y0 = ss1$y0, y1 = ss1$y1, col='purple')
-
-
-points(PC2 ~ PC1, col=as.factor(rownames(score)), pch = 19, xlab='V1', ylab='V2',data=score)
-with(score,text(PC2 ~ PC1, labels=as.factor(rownames(score)), pos = 3, cex=1.4))
-
-
-plot(PC2 ~ PC1, col=as.factor(rownames(score)), 
-     pch = 19, xlim=c(-2.2, 2.2), ylim = c(-2.2,2.2),
-     xlab='PC1', ylab='PC2',data=score)
-
-abline(h = 0, col = 'purple')
-abline(v = 0, col ='orange')
-
-
-perp.segment.vert <- function(x0, y0){
-  x1 <- 0
-  y1 <- y0
-  
-  list(x0 = x0, y0 = y0, x1 = x1, y1 = y1)
-}
-
-ss1a <- perp.segment.vert(score[,1], score[,2])
-segments(x0 = ss1a$x0, x1 = ss1a$x1, y0 = ss1a$y0, y1 = ss1a$y1, col='orange')
-
-
-points(PC2 ~ PC1, col=as.factor(rownames(score)), pch = 19, xlab='V1', ylab='V2',data=score)
-
-with(score,text(PC2 ~ PC1, labels=as.factor(rownames(score)), pos = 3, cex=1.4))
-
-title(xlab = "PC1",
-      ylab = "PC2",
-      outer = TRUE, 
-      line = 3)
-
-par(op)
-
-
-
-### Using blackbox PCA functions ----
-
-data(varechem)
-
-Y <- varechem[, 1:2]
-Y_std <- as.matrix(scale(Y))
-Y_R <- cov(Y_std)
-
-(Eigenvalues <- eigen(Y_R, symmetric = T)$values)
-(Eigenvectors <- eigen(Y_R, symmetric = T)$vectors)
-
-(F_PrComps <- Y_std %*% Eigenvectors)
-
-head(F_PrComps)
-
-# Using stats::prcom()
-PCA_prcomp <- stats::prcomp(Y, center = TRUE, scale = TRUE)
-
-# or PCA_prcomp <- prcomp(Y_std)
-
-(prcomp_scores <- PCA_prcomp$x)
-
-# Using stats: princomp()
-
-PCA_princomp <- stats::princomp(Y_std)
-
-head(PCA_princomp$scores)
-
-# Using vegan::rda()
-
-PCA_vegan_rda <- vegan::rda(Y_std)
-
-test <- scores(PCA_vegan_rda, display = "sites", scaling = 1, choices = seq_len(PCA_vegan_rda$CA$rank),
-       const = sqrt(PCA_vegan_rda$tot.chi * (nrow(PCA_vegan_rda$CA$u) -
-                                               1)))[1:5, ]
-
-
-### Practice using on Hellinger transformed Doubs fish data ----
-
-# Hellinger transform Doubs fish data
-spe.hel <- vegan::decostand(species, method = "hellinger")
-
-# Standardize Hellinger transformed fish data
-spe.hel.std <- as.matrix(scale(spe.hel))
-
-# Calculate covariance matrix of the fish data
-spe.cov <- cov(spe.hel.std)
-
-# Calculate the eigenvalues and eigenvectors
-spe_cov_e <- eigen(spe.cov)
-(spe.eigvec <- spe_cov_e$vectors)
-(spe.eigval <- spe_cov_e$values)
-
-
-(spe.pcscores <- spe.hel.std %*% spe.eigvec)
-
-spe.pca.vegan <- rda(spe.hel)
-summary(spe.pca.vegan)
-plot(spe.pca.vegan$CA$eig, xlim = c(0,50))
-points(spe.eigval, col = "red")
-  
-
-
-# From R-bloggers:
-# Calculate PCA from scratch
-
-library(tidyverse)
-
-set.seed(1)
-# Variable 1
-var_1 <- rnorm(50, 50, sd = 3)
-# Variable 2
-var_2 <- .5*var_1 + rnorm(50, sd = sqrt(3))
-# Both variables in a data frame
-data_set_1 <- data.frame(var_1, var_2)
-head(data_set_1)
-
-# A scatter plot with the two simulated variables
-ggplot(data_set_1, aes(x = var_1, y = var_2)) +
-  geom_point(color = "blue", size = 2) +
-  xlab("Variable 1") +
-  ylab("Variable 2") +
-  theme_classic()
-
-# Subtract the mean from each variable
-data_set_1 <- data_set_1 %>% 
-  mutate(varc_1 = var_1 - mean(var_1), varc_2 = var_2 - mean(var_2))
-head(data_set_1)
-
-# Scatter plot for the centered data 
-ggplot(data_set_1, aes(x = varc_1, y = varc_2)) +
-  geom_point(color = "blue", size = 2) +
-  geom_vline(xintercept = 0, size = .5) +
-  geom_hline(yintercept = 0, size = .5) +
-  theme_classic()
-
-# Select just the centered variables
-data_set_2 <- data_set_1 %>% 
-  select(varc_1, varc_2) %>% 
-  as.matrix()
-# Calculate the covariance matrix
-cov_m <- (t(data_set_2) %*% data_set_2) / (nrow(data_set_2) - 1) 
-cov_m
-
-# Use eigen() to obtain eigenvectors and eigenvalues
-cov_e <- eigen(cov_m)
-# Eigenvectors
-e_vec <- cov_e$vectors
-# Eigenvalues
-e_val <- cov_e$values
-
-# First eigenvector 
-ev_1 <- e_vec[,1]
-# First eigenvector slope
-ev1_m <- ev_1[2] / ev_1[1]
-# Second eigenvector 
-ev_2 <- e_vec[,2]
-# Second eigenvector slope
-ev2_m <- ev_2[2] / ev_2[1]
-# Scatter plot showing the span of both eigenvectors 
-ggplot(data.frame(data_set_2), aes(x = varc_1, y = varc_2)) +
-  geom_point(color = "blue", size = 2) +
-  geom_vline(xintercept = 0, size = .5) +
-  geom_hline(yintercept = 0, size = .5) +
-  geom_abline(slope = ev1_m, color = "blue", size = 0.7) +
-  geom_abline(slope = ev2_m, color = "red", size = 0.7) +
-  theme_classic()
-
-# Multiply both eigenvectors 
-ev_1 %*% ev_2
-##      [,1]
-## [1,]    0
-
-# Calculate the estimated variance for each eigenvalue
-e_var <- e_val / (nrow(data_set_2) - 1)
-# Data frame with variance percentages
-var_per <- data.frame(
-  PC  = c("PC1", "PC2"),
-  PER = c(e_var) * 100 / sum(e_var) # Calculate the percentage
-)
-# Scree plot 
-ggplot(var_per, aes(x = PC, y = PER)) +
-  geom_col(width = 0.5, color = "black") +
-  xlab("Principal component") +
-  ylab("Percentage of variation (%)") +
-  theme_classic()
-
-# Norm of the first eigenvector
-norm(as.matrix(ev_1), "F")
-## [1] 1
-# Norm of the second eigenvector
-norm(as.matrix(ev_2), "F")
-## [1] 1
-
-# Data frame with both eigenvectors
-loads <- data.frame(
-  VAR   = c("var_1", "var_2"),
-  PC1 = ev_1, # First eigenvecor
-  PC2 = ev_2  # Second eigenvectors
-)
-loads
-##     VAR        PC1        PC2
-## 1 var_1 -0.8134113  0.5816890
-## 2 var_2 -0.5816890 -0.8134113
-?solve
-# Inverse of eigenvectors matrix
-inv_evec <- solve(e_vec) 
-# Change the basis of the original data 
-data_set_3 <- data_set_2 %*% inv_evec
-# Scatter showing the rotation 
-ggplot(data.frame(data_set_3), aes(X1, X2)) +
-  geom_point(color = "blue", size = 2) +
-  geom_vline(xintercept = 0, size = .5) +
-  geom_hline(yintercept = 0, size = .5) +
-  xlab("PC1 (78.8%)") +
-  ylab("PC2 (21.2%)") +
-  theme_classic()
-
-library(ggpubr)
-# Scatter plot with the centered data 
-plot_data <- ggplot(data.frame(data_set_2), aes(x = varc_1, y = varc_2)) +
-  geom_point(color = "blue", size = 2) +
-  geom_vline(xintercept = 0, size = .5) +
-  geom_hline(yintercept = 0, size = .5) +
-  ylim(c(-8, 8.5)) +
-  ggtitle("Original Data") +
-  theme_classic()
-# Scatter plot with the rotated data
-plot_rotation <- ggplot(data.frame(data_set_3), aes(X1, X2)) +
-  geom_point(color = "blue", size = 2) +
-  geom_vline(xintercept = 0, size = .5) +
-  geom_hline(yintercept = 0, size = .5) +
-  xlab("PC1 (78.8%)") +
-  ylab("PC2 (21.2%)") +
-  ylim(c(-8, 8.5)) +
-  ggtitle("Change of Basis to Eigenvectors") +
-  theme_classic()
-# Both graphs side by side
-ggarrange(plot_data, plot_rotation)
-
-# Data points just from PC 1
-data_pc1 <- data.frame(v1 = data_set_3[,1], v2 = rep(0, nrow(data_set_3)))
-# Scatter plot showing the projected points from PC1 (red points)
-ggplot(data.frame(data_set_3), aes(X1, X2)) +
-  geom_point(color = "blue", size = 2) +
-  geom_point(data = data_pc1, aes(v1, v2), color = "red", size = 2) +
-  geom_vline(xintercept = 0, size = .5) +
-  geom_hline(yintercept = 0, size = .5) +
-  xlab("PC1 (78.8%)") +
-  ylab("PC2 (21.2%)") +
-  ylim(c(-8, 8.5)) +
-  theme_classic()
