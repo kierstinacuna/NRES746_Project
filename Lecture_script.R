@@ -134,6 +134,9 @@ calc_bc_dist(Y.hmm)
 
 
 # 1.  Load the varechem dataset
+
+# Change the data set (Doubs)
+
 data(varechem)
 (data <- varechem[, 1:2]) # Select the Nitrogen and Phosphous data columns
 
@@ -320,7 +323,7 @@ title(main = "Biplot of Site and Variable Loading Scores against the First and S
 
 ### PCA analysis using built-in functions ----
 
-  # Using stats::prcom()
+  # Using stats::prcomp()
 PCA_prcomp <- stats::prcomp(data_std, center = TRUE, scale = TRUE)
 
 biplot(PCA_prcomp, scale = 0)
