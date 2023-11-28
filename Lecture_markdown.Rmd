@@ -3,7 +3,10 @@ title: "Ordination Lecture"
 author: "Kierstin Acuna & Martin Genova"
 date: "`r Sys.Date()`"
 output:
-  html_document: default
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
   word_document: default
 ---
 
@@ -13,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction to Ordination
 
-### Outline
+## Outline
 
 1.  Introduction
 2.  Definition of Ordination
@@ -24,7 +27,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ------------------------------------------------------------------------
 
-## Introduction
+# Introduction
 
 So far in this course we have learned several powerful techniques for analyzing data (LM's, GLM's, GLMM's, GAM's, etc.). All of these methods focus on modeling one response variable as a function of one or more predictor variables. For example, say we want to know how a fish species of interest (Cottus gobio) is impacted by a handful of environmental variables (pH, average stream flow, and dissolved oxygen concentration).
 
@@ -39,16 +42,19 @@ library(vegan)
 
 # Load Doubs fish Data ----
 data(Doubs)
+?Doubs #Information about the Doubs Fish data set.
 species <- as.data.frame(Doubs.fish[-8,])
 vars <- as.data.frame(cbind(Doubs.env[-8,],Doubs.geo[-8,]))
 
 ```
 
 ```{r}
-# Run a Gamma-Distributed GLM
-CHA.alt <- species$CHA + 1
+# GLM example ----
+# Cottus gobio gamma distributed model
+
+CHA.alt <- species$CHA + 1 #get rid of zeros to prep for log link
 COGO_mod <- glm(CHA.alt ~ pH + flo + oxy, data = vars, family = Gamma(link = "log"))
-summary(COGO_mod)
+summary(COGO_mod) #oxygen is significantly positive!
 ```
 
 It looks like this fish does better when dissolved oxygen concentrations are higher. Cool!
@@ -122,7 +128,7 @@ We can populate the association matrix A~m,m~ with the relationships between all
 
 ------------------------------------------------------------------------
 
-## Dissimmilarity Measures
+# Dissimmilarity Measures
 
 Now that we understand what an association matrix is, we need to know how to calculate the associations between sites (rows) or species (columns). How do we fill in our association matrix, A?
 
@@ -130,9 +136,9 @@ We can obtain the association matrix (A~n,n~ or A~m,m~) in the form of pairwise 
 
 The most common way to calculate distance or dissimilarity matrices is by using the function stats::dist().
 
-### Types of Distance Coefficients
+## Types of Distance Coefficients
 
-#### Euclidean Distance
+### Euclidean Distance
 
 The most common distance measure is the **Euclidean distance**, which falls under the category of **Metric** distance coefficients. It's used as the default metric for principal component analysis (PCA). Euclidean distance is a measure of the distance between two points in Euclidean space, which is typically planar and orthogonal. In two dimensions, the Euclidean distance between two points p and q can be calculated using the Pythagorean theorem:
 
@@ -191,7 +197,7 @@ Looking at the Euclidean distance output, lower numbers indicate similarity betw
 
 Therefore, Euclidean distance should not be used to compare sites based on species abundances. This distance is better used when a zero value has a clear and singular meaning, such as a data set that consists of ecological descriptors (i.e., soil nutrients, climate variables, topographical variables). There are other distance metrics that better deal with the double-zero problem.
 
-#### Bray-Curtis Coefficient
+### Bray-Curtis Coefficient
 
 Another distance coefficient that is better suited to analyze species abundances is the Bray-Curtis coefficient. This coefficient falls under the **Semimetric** category of distance coefficients. The coefficient can be calculated:
 
@@ -256,13 +262,13 @@ calc_bc_dist(Y.hmm)
 
 ```
 
-#### Other Distance Coefficients
+### Other Distance Coefficients
 
 Besides Euclidean distance, common **Metric** coefficients include **Chord distances** and **Jaccard's coefficient**. Another common **Semimetric coefficient** is **Sørensen's coefficient**. A final group of distance coefficients are **Nonmetric**, one of which is **Mahalanobis distance**. You can find out more about these distance coefficients [here](https://r.qcbs.ca/workshop09/book-en/types-of-distance-coefficients.html#bray-curtis-coefficient)
 
 ***
 
-## Unconstrained Ordination
+# Unconstrained Ordination
 
 Unconstrained ordination methods are multivariate techniques used to visualize and explore relationships among variables or observations in a dataset without imposing any specific constraints on the relationships.
 
@@ -274,7 +280,7 @@ Some common unconstrained ordination methods include **principal component analy
 
 Overall, unconstrained ordination methods are widely used in ecology to explore patterns and relationships among biological communities and environmental variables. These methods are valuable tools for identifying key factors that influence community composition and structure, and for developing hypotheses about the underlying ecological processes that drive these patterns.
 
-### Principal Component Analysis
+## Principal Component Analysis
 
 Principal Component Analysis (PCA) is a statistical technique used to reduce the dimensionality of a data set while retaining most of its variability. It's more common uses are analyzing environmental gradients.
 
@@ -288,7 +294,7 @@ Note: PCA uses Euclidean distances to calculate similarities in data sets.
 
 To become comfortable with PCA, we will follow with detailed examples on how to perform it step-by-step, and then we will use functions from R packages to do it.
 
-##### Breaking Down a PCA
+### Breaking Down a PCA
 
 1.  Load the data set
 
@@ -577,7 +583,8 @@ We can analyze these plots by remembering that our Principal components are line
 
 The second principal component is orthogonal of principal component 2(PC2) and can be interpreted independently of PC1. You can therefore make other species inferences by moving along PC2.
 
-##### Scaling
+### Scaling
+
 One last note is that the biplot function has a scaling argument that allows
 us to change our visualization of the data to allow for different inferences.
 
@@ -596,7 +603,7 @@ biplot(PCA_rda, scaling = 1)
 
 ***
 
-### Correspondence Analysis
+## Correspondence Analysis
 
 Like PCA, Correspondence Analysis(CA) is another technique to reduce the dimensionality of a data set. However, the difference is the use of Chi^2^ distances instead of the Euclidean distances as used in PCA. This feature is better for species abundance data sets where the species distribution is unimodal or where there are lots of zeros. Using a PCA with a unimodal species distribution can lead to a phenomenon called a "horseshoe" effect", which can occur with long ecological gradients. 
 
@@ -638,7 +645,7 @@ text(vegan::scores(spe.ca, display = "species", choices = c(1), scaling = 2),
 ```
 
 
-### Principal Coordinate Analysis
+## Principal Coordinate Analysis
 
 Principal Coordinate Analysis (PCoA) builds upon PCA and CA by allowing the use of other distance metrics beyond Euclidean and Chi^2^. PCoA is best used when trying to visualize distance between objects or when data sets have more columns than rows. 
 
@@ -659,7 +666,7 @@ ape::biplot.pcoa(spe.bc.pcoa, spe.hel, dir.axis2 = -1)
 
 ```
 
-### Nonmetric MultiDimensional Scaling
+## Nonmetric MultiDimensional Scaling
 In PCA, CA and PCoA, a goal is to organize (ordinate) objects using using descriptors in full dimensional space. These descriptors are represented by axes which show the variation in descriptors among sites and preserves the distance among those sites. However, when creating a biplot to describe the space, a good portion of the variation can be lost by only showing two axes, while a portion of the variation is described by all the other axes.
 
 With NMDS, the relationship among objects is the priority over showing the distances between object. Additionally, the almost all of the variation among sites can be visualized with less than three axes. Therefore, the biplot produced by an NMDS is a better two dimensional representation of similarity between objects than PCA, CA, and PCoA. 
@@ -683,20 +690,22 @@ When we run an NMDS, objects are first positioned in a random starting condition
 Stress scores lower than <0.2 are generally interpreted as there being a good visual representation of complete multidimensional space in the specified number of NMDS dimensions. <0.1 is great, and <0.05 is excellent, except that is rare.
 
 ``` {r}
-# Stress
+# Stress score
 spe.nmds$stress # A stress score <0.1. Great!
 ```
 
 We can do a visual check of goodness-of-fit using a Shepard's plot.
 
 ``` {r}
-stressplot(spe.nmds, main = "Shepard plot")
+# Shepard Plot
+vegan::stressplot(spe.nmds, main = "Shepard plot")
 ```
 Each of the points represent pairwise comparisons of the objects. The high correlation we see here indicates that the pairwise comparisons between multidimensional space (Observed Dissimilarity) and the configuration of objects in two dimensions (Ordination Distance) are correlated (higher ordination distance = higher observed distance). Therefore, the NMDS in two dimensions is a good fit. 
 
 Now lets make a biplot.
 
 ``` {r, fig.height = 7, fig.width = 7}
+# NMDS Biplot
 vegan::ordiplot(spe.nmds, type = "t", xlim = c(-2,2),
                 ylim = c(-1.5, 1.5), main = "NMDS with Doubs Fish Species Community Abundance Data", sub = "Hellinger Transformed data with Bray-Curtis Coefficients")
 abline(v = 0, h = 0)
@@ -706,6 +715,6 @@ With an NMDS plot, we can say that sites close together have small Bray-Curtis d
 
 ***
 
-## Contrained Ordination
+# Contrained Ordination
 
-Now that we've covered a suite of common uncontrained ordination techniques, 
+Now that we've covered a suite of common Uncontrained ordination techniques, 

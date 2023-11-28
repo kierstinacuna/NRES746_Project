@@ -14,10 +14,9 @@ library(tidyverse)
 # Load Doubs fish Data ----
 
 data(Doubs)
+?Doubs #Information about the Doubs Fish data set.
 species <- as.data.frame(Doubs.fish[-8,])
 vars <- as.data.frame(cbind(Doubs.env[-8,],Doubs.geo[-8,]))
-
-?Doubs
 
 # GLM example ----
 # Cottus gobio gamma distributed model
@@ -418,17 +417,25 @@ ape::biplot.pcoa(spe.bc.pcoa, spe.hel, dir.axis2 = -1)
 
 ## Nonmetric MultiDimensional Scaling ----
 
-# Load Data
+# Run an NMDS
 data(Doubs)
 species <- Doubs.fish[-8,]
-
-# Standardize and transform data
 spe.h <- decostand(species, method = "hellinger")
 
 # Run the NMDS
-spe.nmds <- metaMDS(spe.h, distance = "bray", autotransform = F)
-spe.nmds
+spe.nmds <- vegan::metaMDS(spe.h,
+                           distance = "bray", # specify the distance coefficient to be calculated in the function
+                           k = 2, # specify the number of dimensions
+                           autotransform = F # indicates that transformation has already been applied to the data
+)
 
-# Plot NMDS
-ordiplot(spe.nmds, type = "t")
+# Stress score
+spe.nmds$stress # A stress score <0.1. Great!
 
+# Shepard Plot
+vegan::stressplot(spe.nmds, main = "Shepard plot")
+
+# NMDS Biplot
+vegan::ordiplot(spe.nmds, type = "t", xlim = c(-2,2),
+                ylim = c(-1.5, 1.5), main = "NMDS with Doubs Fish Species Community Abundance Data", sub = "Hellinger Transformed data with Bray-Curtis Coefficients")
+abline(v = 0, h = 0)
