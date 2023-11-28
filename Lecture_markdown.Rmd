@@ -727,12 +727,17 @@ With an NMDS plot, we can say that sites close together have small Bray-Curtis d
 
 # Constrained Ordination
 
-In contrast to Unconstrained ordination, Constrained Ordination requires prior knowledge or assumptions about the structure of the data or the relationships among variables. Generally, the goal is to identify relationships between a multivariate response table and a multivariate explanatory table by combining ordination and regression. Like Unconstrained Ordination, axes that describe the variance in a data set are produced, but these axes are constrained by environmental variables. 
+In contrast to Unconstrained ordination, Constrained Ordination requires prior knowledge or assumptions about the structure of the data or the relationships among variables. Generally, the goal is to identify relationships between a multivariate response table (species composition) and a multivariate explanatory table (environmental gradients) by combining ordination and regression. Like Unconstrained Ordination, axes that describe the variance in a data set are produced, but these axes are constrained by environmental variables. The constrained ordination axes correspond to the directions of the variability in species composition which is explained by these environmental variables.
 
- 
+Unlike Unconstrained Ordination, Constrained Ordination can by used to test hypothesis about the relationship between the environmental variables and species composition. It can partition the variance of species composition into the fraction explained by environmental variables (associated with constrained ordination axes), and not explained by environmental variables (unconstrained ordiation axes).   
+
+There are three ways you can work with environmental variables in the context of Constrained Ordination. The first is [Forward Selection](https://www.davidzeleny.net/anadat-r/doku.php/en:forward_sel), which is the selection of environmental variables relevant to species composition. The second is [Monte Carlo permutation test](https://www.davidzeleny.net/anadat-r/doku.php/en:monte_carlo), which aims to test the significance of the variance explained by chosen environmental factors. And finally [variance partitioning](https://www.davidzeleny.net/anadat-r/doku.php/en:varpart), which is partitioning the variance.
+
+The two most common Constrained Ordination techniques are Redundancy Analysis (RDA) and Constrained Correspondence Analysis (CCA). RDA can be thought of as the constrained form of PCA, while CCA is the constrained form of Correspondence Analysis. 
+
 ## Redundancy Analysis
 
-One popular type of Constrained Ordination technique is Redundancy Analysis. This analysis models the effect of an explanatory matrix on a **response matrix**. That idea is important, as we have usually modeled multiple explanatory variables in one variable. A summary of the technique is that an ordination is done on a response matrix **Y** to obtain ordination axes that are linear combinations of explanatory matrix **X**. 
+The Redundancy Analysis models the effect of an explanatory matrix on a **response matrix**. That idea is important, as we have usually modeled multiple explanatory variables in one variable. A summary of the technique is that an ordination is done on a response matrix **Y** to obtain ordination axes that are linear combinations of explanatory matrix **X**. 
 
 Like PCA, explanatory variables can be quantitative (centered, standardized, transformed or normalized, and collinearity reduced), qualitative, and binary variables. 
 
@@ -742,7 +747,11 @@ Like PCA, explanatory variables can be quantitative (centered, standardized, tra
 
 ![](images/Lab_1.png){Width="60%"}
 
-2. Run a PCA on the matrix of fitted values **Y**~***fit***~, which produces eigenvalues and eigenvectors, which for an RDA are called canonical axes. 
+2. Run a PCA on the matrix of fitted values **Y**~***fit***~, which produces eigenvalues and eigenvectors, which for an RDA are called canonical axes. These axes are stred in a matrix ***Z***, which correspond to the linear combinations of the explanatory variables in ***X***. In analyzing community composition, these canonical axes are interpreted as complex environmental gradients. 
+
+We won't go into Canonical Correspondence Analysis in this lecture but more information can be found [here](https://ordination.okstate.edu/overview.htm#Canonical_Correspondence_Analysis). 
+
+For the lab, we'll go through a Redundancy Analysis on the Doubs fish data set.
 
 ***
 
