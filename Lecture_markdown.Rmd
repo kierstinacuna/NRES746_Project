@@ -781,6 +781,3 @@ NMDS
 - [Ecological Applications in R, NMDS in R](https://youtu.be/OMrtxobDhrM?si=LoMLX6qveRi0G_FR)
 - [NMDS TUTORIAL IN R](https://jonlefcheck.net/2012/10/24/nmds-tutorial-in-r/)
 - [Stress scores](https://uw.pressbooks.pub/appliedmultivariatestatistics/chapter/nmds/#Stress)
-
-
-
