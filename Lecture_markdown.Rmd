@@ -281,7 +281,7 @@ These methods are called "unconstrained" because they do not require prior knowl
 
 Unconstrained ordination methods work by representing the variables or observations in a lower-dimensional space, such as a two-dimensional or three-dimensional plot, while preserving the overall structure of the data.
 
-Some common unconstrained ordination methods include **principal component analysis (PCA)**, **correspondence analysis (CA)**, and **multidimensional scaling (MDS)**. These methods can be applied to a wide range of ecological data, including species abundance data, environmental data, and community similarity matrices.
+Some common unconstrained ordination methods include **principal component analysis (PCA)**, **correspondence analysis (CA)**, **principal coordinates analysis (PCoA)**, and **multidimensional scaling (MDS)**. These methods can be applied to a wide range of ecological data, including species abundance data, environmental data, and community similarity matrices.
 
 Overall, unconstrained ordination methods are widely used in ecology to explore patterns and relationships among biological communities and environmental variables. These methods are valuable tools for identifying key factors that influence community composition and structure, and for developing hypotheses about the underlying ecological processes that drive these patterns.
 
