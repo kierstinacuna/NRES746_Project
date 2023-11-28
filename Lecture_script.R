@@ -240,16 +240,16 @@ sum(var_per$PER[1:length(eig_vec_kgc)])
 
 # 7. Plot the Principal Components over the data
 
-  # Plot only the first two Principal Components
+# Plot only the first principal component
 plot(BAR ~ BLA, col = as.factor(rownames(spe.hel)), pch = 19,
      xlim = c(-0.25,0.5), ylim = c(-0.5,0.5),
      data = (spe.hel), xlab = "BLA (Standardized)", ylab = "BAR (Standardized)")
 abline(v=0 , h=0, col = "dark gray")
 
-  # Overlap pertinent eigenvector
+# Overlap first eigenvector/principal component
 abline(0, eig_vec_1[11]/eig_vec_1[6], col='purple')
 
-  # Plot the lines from first eigenvector to points
+# Plot lines from the first eigenvector to points
 line1 <- c(0, eig_vec_1[11]/eig_vec_1[6])
 perp.segment.coord <- function(x0, y0, line1){
   a <- line1[1]  #intercept 
@@ -266,24 +266,22 @@ title(main = "First Principal Component over the Standardized Data",
       sub = "Purple Lines Horizontal to the First Principal Components is the Variance", cex.sub = 0.75)
 
 # Plot both the first and second principal component
-
-# Make another plot to show second principle component
 plot(BAR ~ BLA, col = as.factor(rownames(spe.hel)), pch = 19,
      xlim = c(-0.25,0.5), ylim = c(-0.5,0.5),
-     data = (spe.hel), xlab = "pH (Standardized)", ylab = "har (Standardized)")
+     data = (spe.hel), xlab = "BLA (Standardized)", ylab = "BAR (Standardized)")
 abline(v=0 , h=0, col = "dark gray")
 
-#Overlap pertinent eigen-vectors
+#Overlap pertinent eigenvectors
 abline(0, eig_vec_1[11]/eig_vec_1[6], col='purple')
 abline(0, eig_vec_2[11]/eig_vec_2[6], col='orange')
 
-# Plot the lines from first eigenvector and second to points
+# Plot the lines from second eigenvector to points
 line2 <- c(0, eig_vec_2[11]/eig_vec_2[6])
 ss <- perp.segment.coord(spe.hel[,6], spe.hel[,11], line2)
 segments(x0 = ss$x0, x1 = ss$x1, y0 = ss$y0, y1 = ss$y1,col = 'orange')
 with(spe.hel, text(BAR ~ BLA, labels = as.factor(rownames(spe.hel)),pos = 1, cex=1))
-title(main = "First (Purple) and Second (Orange) Principal Component over the Standardized Data", cex.main = 0.8, sub = "Lines Horizontal to the Principal Components are the Variance", cex.sub = 0.75)
-
+title(main = "First (Purple) and Second (Orange) Principal Component over the Standardized Data",
+      cex.main = 0.8, sub = "Lines Horizontal to the Principal Components are the Variance", cex.sub = 0.75)
 # 8.Loading Scores
 
   # Elements of each eigenvector are called loadings and can be interpreted as the contribution of each variable in the data set to 
@@ -296,23 +294,26 @@ variable.loads <- data.frame(
   PC01 = eig_vec_1, # First eigenvector
   PC02 = eig_vec_2  # Second eigenvector
 )
+head(variable.loads)
 
   # You can also calculate the loading score for each site, which shows how they are placed in relation to the principal
   # components.
 
-  # Calculate site loading scores
+  # Get site loading scores
 loading.scores <- as.data.frame(as.matrix(spe.hel) %*% eig_vectors)
 colnames(loading.scores) = c("PC01", "PC02", "PC03", "PC04", "PC05", "PC06","PC07", "PC08",
                              "PC09", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PC16",
                              "PC17", "PC18", "PC19", "PC20", "PC21", "PC22", "PC23", "PC24",
                              "PC25", "PC26", "PC27")
+head(loading.scores)
 
-# 9. Make a biplot of the Principal Components and Variable Loading Scores
+# 9. Make a biplot of the Principal Components and Loading Scores
 
   # Set plot parameters
 par(mar = c(5, 5, 10, 5),
      mgp = c(2, 1, 0))
 
+  # Plot site loading scores
 plot(loading.scores[,2] ~ loading.scores[,1], 
      xlab = 'PC1', ylab = "PC2",
      xlim = c(-1,1), ylim  = c(-1,1),col = as.factor(rownames(loading.scores)), pch = 19)
@@ -338,7 +339,7 @@ for (i in 1:nrow(variable.loads)) {
 with(variable.loads, text(PC02 ~ PC01, labels = as.factor(rownames(variable.loads)),pos = 1, cex=1,
                  col = "red"))
 title(main = "Biplot of Site and Variable Loading Scores against the First and Second Principal Components",
-      cex.main = 0.8)
+      cex.main = 0.9)
 
 ### PCA analysis using built-in functions ----
 
