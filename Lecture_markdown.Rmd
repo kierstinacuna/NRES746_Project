@@ -25,6 +25,8 @@ knitr::opts_chunk$set(echo = TRUE)
 5.  Unconstrained Ordination
 6.  Constrained Ordination
 
+R Script for this lab can be found here.
+
 ------------------------------------------------------------------------
 
 # Introduction
