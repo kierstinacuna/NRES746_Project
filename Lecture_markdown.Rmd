@@ -676,7 +676,7 @@ ape::biplot.pcoa(spe.bc.pcoa, spe.hel, dir.axis2 = -1)
 ## Nonmetric MultiDimensional Scaling
 In PCA, CA and PCoA, a goal is to organize (ordinate) objects using using descriptors in full dimensional space. These descriptors are represented by axes which show the variation in descriptors among sites and preserves the distance among those sites. However, when creating a biplot to describe the space, a good portion of the variation can be lost by only showing two axes, while a portion of the variation is described by all the other axes.
 
-With NMDS, the relationship among objects is the priority over showing the distances between objects. Additionally, the almost all of the variation among sites can be visualized with less than three axes. Therefore, the biplot produced by an NMDS is a better two dimensional representation of similarity between objects than PCA, CA, and PCoA.
+With NMDS, the relationship among objects is the priority over showing the distances between objects. Additionally, almost all of the variation among sites can be visualized with less than three axes. Therefore, the biplot produced by an NMDS is a better two dimensional representation of similarity between objects than PCA, CA, and PCoA.
 
 Lets run an NMDS on the fish data:
 ``` {r}
