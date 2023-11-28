@@ -366,7 +366,7 @@ eigen_decomp <- eigen(cov_matrix)
 
 ```
 
-Again, eigenvalues tell us the relative amount of variance explained by each eigenvector. The higher the eigenvalue, more more variance explained by that eigenvector.
+Again, eigenvalues tell us the relative amount of variance explained by each eigenvector. The higher the eigenvalue, the more variance explained by that eigenvector.
 
 ```{r}
 # Extract Eigenvectors
