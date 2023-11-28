@@ -443,7 +443,7 @@ broken_stick <- function(eig_values) {
 broken_stick(eig_values)
 ```
 
-If we use the Kaiser-Guttman Criterion, we can how much how much variation is captured by the 5 selected principal components.
+The Kaiser-Guttman Criterion in this example suggests that we should use the first 5 principal components. We can calculate how much variation is captured by these first 5:
 
 ``` {r}
 eig_vec_kgc <- eig_values[eig_values > mean(eig_values)]
