@@ -737,7 +737,7 @@ Like PCA, explanatory variables can be quantitative (centered, standardized, tra
 
 1. Multiple regression, where each object in **Y** is regressed on the explanatory variables **X**, which produces a matrix of fitted values **Y**~***fit***~
 
-![](images/Lab_1.png){Width="75%"}
+![](images/Lab_1.png){Width="60%"}
 
 2. Run a PCA on the matrix of fitted values 
 
