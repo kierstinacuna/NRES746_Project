@@ -85,43 +85,45 @@ We can make informative and great looking figures like this:
 
 ![](images/Lecture_3.png){width="50%"}![](images/Lecture_4.png){width="50%"}
 
+In other cases, ordination is used as a step in a series of analyses. You can often use ordination to reduce the number of variables to avoid multicollinearity, or reduce the dimensionality of a data set to a limited number of axes, which are then used in regression, classification, or clustering. Some ordination techniques can even be used directly for hypothesis testing.
+
 In order to understand the techniques behind ordination, we first need to have a basic understanding of matrices and matrix algebra
 
 ------------------------------------------------------------------------
 
 ## Review of Matrices and Matrix Algebra
 
-Most ecological data can take the form of a matrix, where x is the sampling unit (e.g., site, plot), and y is the ecological descriptor (e.g., species presence-absence, topographical variables, chemical variables).
+Most ecological data can take the form of a matrix, where *x* is the sampling unit (e.g., site, plot), and *y* is the ecological descriptor (e.g., species presence-absence, topographical variables, chemical variables).
 
 ![](images/Lecture_5.png)
 
 The same ecological data table can be represented in matrix notation like this:
 
-![In this example, y1,1 represents species 1 in site 1. ym,n represents species n in site m.](images/Lecture_6.png)
+![In this example, *y~1,1~* represents species 1 in site 1. *y~m,n~* represents species *n* in site *m*.](images/Lecture_6.png)
 
 ### Association Matrices
 
-Using the data from our matrix Y:
+Using the data from our matrix *Y*:
 
 ![](images/Lecture_7.png)
 
-one can examine the relationship between the first two objects (rows):
+One can examine the relationship between the first two objects, *x~1~* and *x~2~*:
 
 ![](images/Lecture_8.png)
 
-and obtain a~1,2~.
+We refer to the relationship between *x~1~* and *x~2~* as *a~1,2~*.
 
-We can populate the association matrix A~n,n~, with the relationships between all objects from Y.
+We can populate the association matrix *A~n,n~*, with the relationships between all objects from *Y*.
 
 ![](images/Lecture_9.png)
 
 This is the basis of most ordination methods (Q-mode, where the associations between objects, or sites/plots, are analyzed).
 
-We can also analyze the associations between ecological descriptors (columns) (R-mode).
+We can also analyze the associations between ecological descriptors (columns, R-mode).
 
 ![](images/Lecture_10.png)
 
-We can populate the association matrix A~m,m~ with the relationships between all descriptors from Y:
+We can populate the association matrix *A~m,m~* with the relationships between all descriptors from *Y*:
 
 ![](images/Lecture_11.png)
 
@@ -129,9 +131,9 @@ We can populate the association matrix A~m,m~ with the relationships between all
 
 # Dissimmilarity Measures
 
-Now that we understand what an association matrix is, we need to know how to calculate the associations between sites (rows) or species (columns). How do we fill in our association matrix, A?
+Now that we understand what an association matrix is, we need to know how to calculate the associations between sites (rows) or species (columns). How do we fill in our association matrix, *A*?
 
-We can obtain the association matrix (A~n,n~ or A~m,m~) in the form of pairwise distances or dissimilarities D~m,m~ (or similarities S~m,m~) and then analyze those distances.
+We can obtain the association matrix (*A~n,n~* or *A~m,m~*) in the form of pairwise distances or dissimilarities *D~m,m~* (or similarities *S~m,m~*) and then analyze those distances.
 
 The most common way to calculate distance or dissimilarity matrices is by using the function stats::dist().
 
@@ -196,7 +198,7 @@ calc_eu_dist <- function(spe_abun_df) {
 (Y.hmm_eu_dist <- calc_eu_dist(Y.hmm))
 ```
 
-Looking at the Euclidean distance output, lower numbers indicate similarity between sites. The double-zero problem presents itself in that the Euclidean distance between site 1 and site 3 is the lowest, suggesting that they are the most similar sites. However, this is obviously not correct; sites 1 and 3 have no species in common! Because there are multiple reasons why a species might be absent (e.g. sampling error), we want to give more weight to presences in our analyses, and the Euclidean distance is not able to do this.
+Looking at the Euclidean distance output, lower numbers indicate similarity between sites. The double-zero problem presents itself in that the Euclidean distance between site 1 and site 3 is the lowest, suggesting that they are the most similar sites. However, this is obviously not correct; sites 1 and 3 have no species in common! Because there are multiple reasons why a species might be absent (e.g. sampling error, unsuitable habitat), we want to give more weight to presences in our analyses, and the Euclidean distance is not able to do this.
 
 Therefore, Euclidean distance should not be used to compare sites based on species abundances. This distance is better used when a zero value has a clear and singular meaning, such as a data set that consists of ecological descriptors (i.e., soil nutrients, climate variables, topographical variables). There are other distance metrics that better deal with the double-zero problem.
 
@@ -273,7 +275,7 @@ Besides Euclidean distance, common **Metric** coefficients include **Chord dista
 
 # Unconstrained Ordination
 
-Unconstrained ordination methods are multivariate techniques used to visualize and explore relationships among variables or observations in a dataset without imposing any specific constraints on the relationships.
+Unconstrained ordination methods are multivariate techniques used to visualize and explore relationships among variables or observations in a data set without imposing any specific constraints on the relationships. In contrast, constrained ordination methods combine concepts from ordination and regression to test hypotheses. We’ll focus on unconstrained ordination first.
 
 These methods are called "unconstrained" because they do not require prior knowledge or assumptions about the structure of the data or the relationships among variables.
 
@@ -725,8 +727,9 @@ With an NMDS plot, we can say that sites close together have small Bray-Curtis d
 
 # Constrained Ordination
 
-In contrast to Unconstrained ordination, Constrained Ordination requires prior knowledge or assumptions about the structure of the data or the relationships among variables. Generally, the goal is to identify relationships between a multivariate response table and a multivariate explanatory table by combining ordination and regression. 
+In contrast to Unconstrained ordination, Constrained Ordination requires prior knowledge or assumptions about the structure of the data or the relationships among variables. Generally, the goal is to identify relationships between a multivariate response table and a multivariate explanatory table by combining ordination and regression. Like Unconstrained Ordination, axes that describe the variance in a data set are produced, but these axes are constrained by environmental variables. 
 
+ 
 ## Redundancy Analysis
 
 One popular type of Constrained Ordination technique is Redundancy Analysis. This analysis models the effect of an explanatory matrix on a **response matrix**. That idea is important, as we have usually modeled multiple explanatory variables in one variable. A summary of the technique is that an ordination is done on a response matrix **Y** to obtain ordination axes that are linear combinations of explanatory matrix **X**. 
@@ -739,7 +742,7 @@ Like PCA, explanatory variables can be quantitative (centered, standardized, tra
 
 ![](images/Lab_1.png){Width="60%"}
 
-2. Run a PCA on the matrix of fitted values 
+2. Run a PCA on the matrix of fitted values **Y**~***fit***~, which produces eigenvalues and eigenvectors, which for an RDA are called canonical axes. 
 
 ***
 
