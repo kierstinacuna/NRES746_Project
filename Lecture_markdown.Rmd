@@ -320,7 +320,7 @@ head(spe.hel)
 ```{r}
   # Compute covarience matrix by hand
 comp_cov <- function(data) {
-  output_df <- as.data.frame(matrix(NA, nrow = ncol(spe.hel), ncol = ncol(spe.hel)), row.names = colnames(data))
+  output_df <- as.data.frame(matrix(NA, nrow = ncol(data), ncol = ncol(data)), row.names = colnames(data))
   colnames(output_df) <- colnames(data)
   for (i in 1:ncol(data)) {
     mean.dif.x1 <- data[,i] - mean(data[,i])
