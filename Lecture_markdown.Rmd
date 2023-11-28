@@ -729,7 +729,17 @@ In contrast to Unconstrained ordination, Constrained Ordination requires prior k
 
 ## Redundancy Analysis
 
-One popular type of Constrained Ordination technique is Redundancy Analysis. This analysis models the effect of an explanatory matrix on a *response matrix*. That idea is important, as we have usually modeled multiple explanatory variables in one variable. A summary of the technique is that an ordination is done on a response matrix *Y* to obtain ordination axes that are linear combinations of explanatory matrix *X*. 
+One popular type of Constrained Ordination technique is Redundancy Analysis. This analysis models the effect of an explanatory matrix on a **response matrix**. That idea is important, as we have usually modeled multiple explanatory variables in one variable. A summary of the technique is that an ordination is done on a response matrix **Y** to obtain ordination axes that are linear combinations of explanatory matrix **X**. 
+
+Like PCA, explanatory variables can be quantitative (centered, standardized, transformed or normalized, and collinearity reduced), qualitative, and binary variables. 
+
+### How RDA Works
+
+1. Multiple regression, where each object in **Y** is regressed on the explanatory variables **X**, which produces a matrix of fitted values **Y**~***fit***~
+
+![](images/Lab_1.png){Width="75%"}
+
+2. Run a PCA on the matrix of fitted values 
 
 ***
 
