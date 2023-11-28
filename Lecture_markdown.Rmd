@@ -676,7 +676,7 @@ ape::biplot.pcoa(spe.bc.pcoa, spe.hel, dir.axis2 = -1)
 ## Nonmetric MultiDimensional Scaling
 In PCA, CA and PCoA, a goal is to organize (ordinate) objects using using descriptors in full dimensional space. These descriptors are represented by axes which show the variation in descriptors among sites and preserves the distance among those sites. However, when creating a biplot to describe the space, a good portion of the variation can be lost by only showing two axes, while a portion of the variation is described by all the other axes.
 
-With NMDS, the relationship among objects is the priority over showing the distances between object. Additionally, the almost all of the variation among sites can be visualized with less than three axes. Therefore, the biplot produced by an NMDS is a better two dimensional representation of similarity between objects than PCA, CA, and PCoA. 
+With NMDS, the relationship among objects is the priority over showing the distances between object. Additionally, the almost all of the variation among sites can be visualized with less than three axes. Therefore, the biplot produced by an NMDS is a better two dimensional representation of similarity between objects than PCA, CA, and PCoA.
 
 Lets run an NMDS on the fish data:
 ``` {r}
@@ -710,6 +710,7 @@ We can do a visual check of goodness-of-fit using a Shepard's plot.
 # Shepard Plot
 vegan::stressplot(spe.nmds, main = "Shepard plot")
 ```
+
 Each of the points represent pairwise comparisons of the objects. The high correlation we see here indicates that the pairwise comparisons between multidimensional space (Observed Dissimilarity) and the configuration of objects in two dimensions (Ordination Distance) are correlated (higher ordination distance = higher observed distance). Therefore, the NMDS in two dimensions is a good fit. 
 
 Now lets make a biplot.
@@ -721,7 +722,7 @@ vegan::ordiplot(spe.nmds, type = "t", xlim = c(-2,2),
 abline(v = 0, h = 0)
 ```
 
-With an NMDS plot, we can say that sites close together have small Bray-Curtis distances, and therefore share species presences and also abundances. We can also see which fish species are contributing to those similarities. Like a PCA, the axes can later be used as latent variables used in other analyses that describe the environment or community.
+With an NMDS plot, we can say that sites close together have small Bray-Curtis distances, and therefore share species presences and also abundances. We can also see which fish species are contributing to those similarities. Unlike a PCA, the axes cannot be used as a latent variable in further analysis, the position of the data points along the axes are actually ordering of points relative to each other.
 
 ***
 
