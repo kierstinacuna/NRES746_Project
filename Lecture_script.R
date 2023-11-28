@@ -4,12 +4,13 @@
 #$ Martin Genova & Kierstin Acuna $#
 #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
 
+
 # Load libraries ----
 library(codep)
 library(vegan)
 library(datasets)
-library(ape)
 library(tidyverse)
+
 
 # Load Doubs fish Data ----
 
@@ -18,16 +19,20 @@ data(Doubs)
 species <- as.data.frame(Doubs.fish[-8,])
 vars <- as.data.frame(cbind(Doubs.env[-8,],Doubs.geo[-8,]))
 
+
 # GLM example ----
-# Cottus gobio gamma distributed model
+  # Cottus gobio gamma distributed model
 
 CHA.alt <- species$CHA + 1 #get rid of zeros to prep for log link
 COGO_mod <- glm(CHA.alt ~ pH + flo + oxy, data = vars, family = Gamma(link = "log"))
 summary(COGO_mod) #oxygen is significantly positive!
 
+
 # Dissimilarity Measures ----
 
+
 ## Types of Distances Coefficients ----
+
 
 ### Euclidean Distance ----
 
@@ -59,6 +64,7 @@ calc_eu_dist <- function(spe_abun_df) {
 
 # Run Euclidean distance by hand function
 (Y.hmm_eu_dist <- calc_eu_dist(Y.hmm))
+
 
 ### Bray-Curtis Coefficient ----
 
@@ -112,10 +118,12 @@ calc_bc_dist(Y.hmm)
 ### Breaking Down a PCA ----
 
 # 1. Load the data set
+
 data(Doubs)
 species <- Doubs.fish[-8,]
 
 # 2. Apply a Hellinger transformation on the Species abundance data to standardize the data
+
 spe.hel <- as.data.frame(vegan::decostand(species, method = "hellinger"))
 head(spe.hel)
 
@@ -142,18 +150,19 @@ cov_matrix <- comp_cov(spe.hel)
 cov_base_func <- cov(spe.hel)
 
 # 4. Perform the Eigen-decomposition of the covariance matrix
+
 eigen_decomp <- eigen(cov_matrix)
 
-# Extract Eigenvalues
+  # Extract Eigenvalues
 (eig_values <- eigen_decomp$values)
-# Eigenvalues are equal to the sum of squares of the distances of each projected data point in the corresponding principal component
-# The sum of squares is maximized in the first principal component.
+  # Eigenvalues are equal to the sum of squares of the distances of each projected data point in the corresponding principal component
+  # The sum of squares is maximized in the first principal component.
 
-# Extract Eigenvectors
+  # Extract Eigenvectors
 (eig_vectors <- -eigen_decomp$vectors)
 rownames(eig_vectors) = colnames(spe.hel)
-
-# Extract the first two eigenvectors
+  
+  # Extract the first two eigenvectors
 eig_vec_1 <- eig_vectors[,1]
 eig_vec_2 <- eig_vectors[,2]
 
@@ -167,8 +176,8 @@ var_per <- data.frame(
   PC  = c("PC01", "PC02", "PC03", "PC04", "PC05", "PC06","PC07", "PC08", "PC09",
           "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PC16", "PC17", "PC18",
           "PC19", "PC20", "PC21", "PC22", "PC23", "PC24", "PC25", "PC26", "PC27"),
-  PER = c(e_var) * 100 / sum(e_var) # Calculate the percentage
-)
+  PER = c(e_var) * 100 / sum(e_var)) # Calculate the percentage
+
   # Scree plot to show amount of variance accounted by each principal component
 barplot(PER ~ PC, data = var_per,
         xlab = "Principal Components",
@@ -177,32 +186,19 @@ barplot(PER ~ PC, data = var_per,
 # 6. Selecting Principal Components 
 
   # Kaiser-Guttman Criterion
-  # It is generally a good idea to select the principal components that explain most of
-  # the variance in the data. One criterion is the Kaiser-Guttman Criterion, which states
-  # that any eigenvector with an eigenvalue greater than the mean eigenvalue should be retained.
-
 eig_val_PC <- data.frame(
   PC = c("PC01", "PC02", "PC03", "PC04", "PC05", "PC06","PC07", "PC08", "PC09",
          "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PC16", "PC17", "PC18",
          "PC19", "PC20", "PC21", "PC22", "PC23", "PC24", "PC25", "PC26", "PC27"),
   EV = eig_values)
-
+  
+  # Plot principal components and overlay average eigenvalue line
 barplot(EV ~ PC, data = eig_val_PC,
         xlab = "Principal Components",
         ylab = "Eigenvalues")
 abline(h = mean(eig_values), col = "red")
 
   # Broken stick Model
-  # A. Jackson (1993) says that the broken-stick method is one of the better methods for 
-  # choosing the number of PCs. The method provides "a good combination of simplicity of 
-  # calculation and accurate evaluation of dimensionality relative to the other statistical 
-  # approaches" (p. 2212)
-  # the "expected proportions" as corresponding to a null model that contains uncorrelated
-  # (noise) variables. If you plot the eigenvalues of the correlation matrix against the 
-  # broken-stick proportions, the observed proportions that are higher than the expected 
-  # proportions indicate which principal components to keep.
-  # Fall on conservative side of Principal Component selections.
-
 broken_stick <- function(eig_values) {
   # Calculate Broken Stick Model
   n = length(eig_values)
@@ -239,16 +235,16 @@ sum(var_per$PER[1:length(eig_vec_kgc)])
 
 # 7. Plot the Principal Components over the data
 
-# Plot only the first principal component
+  # Plot only the first principal component
 plot(BAR ~ BLA, col = as.factor(rownames(spe.hel)), pch = 19,
      xlim = c(-0.25,0.5), ylim = c(-0.5,0.5),
      data = (spe.hel), xlab = "BLA (Standardized)", ylab = "BAR (Standardized)")
 abline(v=0 , h=0, col = "dark gray")
 
-# Overlap first eigenvector/principal component
+  # Overlap first eigenvector/principal component
 abline(0, eig_vec_1[11]/eig_vec_1[6], col='purple')
 
-# Plot lines from the first eigenvector to points
+  # Plot lines from the first eigenvector to points
 line1 <- c(0, eig_vec_1[11]/eig_vec_1[6])
 perp.segment.coord <- function(x0, y0, line1){
   a <- line1[1]  #intercept 
@@ -264,17 +260,17 @@ with(spe.hel, text(BAR ~ BLA, labels = as.factor(rownames(spe.hel)), pos = 1, ce
 title(main = "First Principal Component over the Standardized Data",
       sub = "Purple Lines Horizontal to the First Principal Components is the Variance", cex.sub = 0.75)
 
-# Plot both the first and second principal component
+  # Plot both the first and second principal component
 plot(BAR ~ BLA, col = as.factor(rownames(spe.hel)), pch = 19,
      xlim = c(-0.25,0.5), ylim = c(-0.5,0.5),
      data = (spe.hel), xlab = "BLA (Standardized)", ylab = "BAR (Standardized)")
 abline(v=0 , h=0, col = "dark gray")
 
-#Overlap pertinent eigenvectors
+  # Overlap pertinent eigenvectors
 abline(0, eig_vec_1[11]/eig_vec_1[6], col='purple')
 abline(0, eig_vec_2[11]/eig_vec_2[6], col='orange')
 
-# Plot the lines from second eigenvector to points
+  # Plot the lines from second eigenvector to points
 line2 <- c(0, eig_vec_2[11]/eig_vec_2[6])
 ss <- perp.segment.coord(spe.hel[,6], spe.hel[,11], line2)
 segments(x0 = ss$x0, x1 = ss$x1, y0 = ss$y0, y1 = ss$y1,col = 'orange')
@@ -342,7 +338,7 @@ title(main = "Biplot of Site and Variable Loading Scores against the First and S
 
 ### PCA analysis using built-in functions ----
 
-par( mar = c(5, 4, 4, 2) + 0.1,mgp = c(3, 1, 0))
+par(mar = c(5, 4, 4, 2) + 0.1,mgp = c(3, 1, 0))
 
   # Using stats: prcomp()
 PCA_prcomp <- stats::prcomp(spe.hel)
@@ -362,33 +358,33 @@ biplot(PCA_rda, scaling = 1)
 
 ### Scaling
 
-# Type 2 scaling
+  # Type 2 scaling
 biplot(PCA_rda, scaling = 2)
 
-# Type 1 scaling
+  # Type 1 scaling
 biplot(PCA_rda, scaling = 1)
 
 
 ## Correspondance Analysis ----
 
-# Run the CA using the cca() function in the vegan package
+  # Run the CA using the cca() function in the vegan package
 
-# Load data
+    # Load data
 data(Doubs)
 species <- Doubs.fish[-8,]
 
-# Run CA using the vegan package
+    # Run CA using the vegan package
 spe.ca <- vegan::cca(species)
 
-# Identify the eigenvectors using the Kaiser-Guttman Criterion
+    # Identify the eigenvectors using the Kaiser-Guttman Criterion
 eig_vec_ca <- spe.ca$CA$eig
 (ev_kgc <- eig_vec_ca[eig_vec_ca > mean(eig_vec_ca)])
 
-# Scree Plot
+    # Scree Plot
 barplot(eig_vec_ca)
 abline(h = mean(eig_vec_ca), col = "red")
 
-# Plot CA
+  # Plot CA
 plot(spe.ca, scaling = 2, type = "none", main = "CA",
      xlab = c("CA1"), ylab = c("CA2"))
 
@@ -402,40 +398,42 @@ text(vegan::scores(spe.ca, display = "species", choices = c(1), scaling = 2),
 
 ## Principal Coordinate Analysis ----
 
-# Use the pcoa() function in the ape package to run a PCoA
+  # Use the pcoa() function in the ape package to run a PCoA
 spe.h.pcoa <- ape::pcoa(dist(spe.hel))
-  # Plot PCoA biplot
+    # Plot PCoA biplot
 ape::biplot.pcoa(spe.h.pcoa, spe.hel)
 
-# Run a PcoA with Bray-Curtis distance
-  # Calculate Bray-Curtis coefficients
+  # Run a PcoA with Bray-Curtis distance
+    # Calculate Bray-Curtis coefficients
 spe.bc <- vegan::vegdist(species, method = "bray")
-  # Run PCoA
+    # Run PCoA
 spe.bc.pcoa <- ape::pcoa(spe.bc)
-  # Plot PCoA biplot
+    # Plot PCoA biplot
 ape::biplot.pcoa(spe.bc.pcoa, spe.hel, dir.axis2 = -1)
 
 ## Nonmetric MultiDimensional Scaling ----
 
-# Run an NMDS
+  # Load Data
 data(Doubs)
 species <- Doubs.fish[-8,]
+
+  # Apply Helligner transformation
 spe.h <- decostand(species, method = "hellinger")
 
-# Run the NMDS
+  # Run the NMDS
 spe.nmds <- vegan::metaMDS(spe.h,
                            distance = "bray", # specify the distance coefficient to be calculated in the function
                            k = 2, # specify the number of dimensions
                            autotransform = F # indicates that transformation has already been applied to the data
 )
 
-# Stress score
+  # Stress score
 spe.nmds$stress # A stress score <0.1. Great!
 
-# Shepard Plot
+  # Shepard Plot
 vegan::stressplot(spe.nmds, main = "Shepard plot")
 
-# NMDS Biplot
+  # NMDS Biplot
 vegan::ordiplot(spe.nmds, type = "t", xlim = c(-2,2),
                 ylim = c(-1.5, 1.5), main = "NMDS with Doubs Fish Species Community Abundance Data", sub = "Hellinger Transformed data with Bray-Curtis Coefficients")
 abline(v = 0, h = 0)

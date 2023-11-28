@@ -29,7 +29,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction
 
-So far in this course we have learned several powerful techniques for analyzing data (LM's, GLM's, GLMM's, GAM's, etc.). All of these methods focus on modeling one response variable as a function of one or more predictor variables. For example, say we want to know how a fish species of interest (Cottus gobio) is impacted by a handful of environmental variables (pH, average stream flow, and dissolved oxygen concentration).
+So far in this course we have learned several powerful techniques for analyzing data (LM's, GLM's, GLMM's, GAM's, etc.). All of these methods focus on modeling one response variable as a function of one or more predictor variables. For example, say we want to know how a fish species of interest (*Cottus gobio*) is impacted by a handful of environmental variables (pH, average stream flow, and dissolved oxygen concentration).
 
 ![](images/Lecture_1.png){Width="75%"}
 
@@ -42,7 +42,6 @@ library(vegan)
 
 # Load Doubs fish Data ----
 data(Doubs)
-?Doubs #Information about the Doubs Fish data set.
 species <- as.data.frame(Doubs.fish[-8,])
 vars <- as.data.frame(cbind(Doubs.env[-8,],Doubs.geo[-8,]))
 
@@ -142,11 +141,15 @@ The most common way to calculate distance or dissimilarity matrices is by using 
 
 The most common distance measure is the **Euclidean distance**, which falls under the category of **Metric** distance coefficients. It's used as the default metric for principal component analysis (PCA). Euclidean distance is a measure of the distance between two points in Euclidean space, which is typically planar and orthogonal. In two dimensions, the Euclidean distance between two points p and q can be calculated using the Pythagorean theorem:
 
+<center>
 ![](images/Lecture_12.png)
+</center>
 
-We can visualized Euclidean Distance below:
+We can visualize Euclidean Distance below:
 
+<center>
 ![](images/Lecture_13.png)
+</center>
 
 Euclidean distance is a commonly used measure in multivariate analyses because it provides a straightforward and intuitive way to measure the distance or similarity between observations in a multidimensional space. However, the problem with Euclidean distance is that while straightforward and intuitive, this distance metric isn't appropriate for species abundance data because of the **double-zero problem**.
 
@@ -264,7 +267,7 @@ calc_bc_dist(Y.hmm)
 
 ### Other Distance Coefficients
 
-Besides Euclidean distance, common **Metric** coefficients include **Chord distances** and **Jaccard's coefficient**. Another common **Semimetric coefficient** is **Sørensen's coefficient**. A final group of distance coefficients are **Nonmetric**, one of which is **Mahalanobis distance**. You can find out more about these distance coefficients [here](https://r.qcbs.ca/workshop09/book-en/types-of-distance-coefficients.html#bray-curtis-coefficient)
+Besides Euclidean distance, common **Metric** coefficients include **Chord distances** and **Jaccard's coefficient**. Another common **Semimetric coefficient** is **Sørensen's coefficient**. A final group of distance coefficients are **Nonmetric**, one of which is **Mahalanobis distance**. You can find out more about these distance coefficients [here](https://r.qcbs.ca/workshop09/book-en/types-of-distance-coefficients.html). More information about distance coefficients can be found [here](https://www.davidzeleny.net/anadat-r/doku.php/en:similarity)
 
 ***
 
@@ -605,7 +608,9 @@ biplot(PCA_rda, scaling = 1)
 
 ## Correspondence Analysis
 
-Like PCA, Correspondence Analysis(CA) is another technique to reduce the dimensionality of a data set. However, the difference is the use of Chi^2^ distances instead of the Euclidean distances as used in PCA. This feature is better for species abundance data sets where the species distribution is unimodal or where there are lots of zeros. Using a PCA with a unimodal species distribution can lead to a phenomenon called a "horseshoe" effect", which can occur with long ecological gradients. 
+Like PCA, Correspondence Analysis(CA) is another technique to reduce the dimensionality of a data set. However, the difference is the use of Chi^2^ distances instead of the Euclidean distances as used in PCA. This feature is better for species abundance data sets where the species distribution is unimodal or where there are lots of zeros. Using a PCA with a unimodal species distribution can lead to a phenomenon called a "horseshoe" effect", which can occur with long ecological gradients.
+
+More information about the "horseshoe effect" can be found [here](https://ordination.okstate.edu/PCA.htm)
 
 When conducting a CA, the only difference to a PCA is that the raw data are first transformed into a matrix of cell-by-call contributions to the Pearson Chi^2^ statistic. Then an eigendecomposition is placed on the resulting matrix, just as in PCA. 
 
@@ -673,8 +678,11 @@ With NMDS, the relationship among objects is the priority over showing the dista
 
 Lets run an NMDS on the fish data:
 ``` {r}
+# Load Data
 data(Doubs)
 species <- Doubs.fish[-8,]
+
+# Apply Helligner transformation
 spe.h <- decostand(species, method = "hellinger")
 
 # Run the NMDS
@@ -715,6 +723,41 @@ With an NMDS plot, we can say that sites close together have small Bray-Curtis d
 
 ***
 
-# Contrained Ordination
+# Constrained Ordination
 
-Now that we've covered a suite of common Uncontrained ordination techniques, 
+In contrast to Unconstrained ordination, Constrained Ordination requires prior knowledge or assumptions about the structure of the data or the relationships among variables. Generally, the goal is to identify relationships between a multivariate response table and a multivariate explanatory table by combining ordination and regression. 
+
+## Redundancy Analysis
+
+One popular type of Constrained Ordination technique is Redundancy Analysis. This analysis models the effect of an explanatory matrix on a *response matrix*. That idea is important, as we have usually modeled multiple explanatory variables in one variable. A summary of the technique is that an ordination is done on a response matrix *Y* to obtain ordination axes that are linear combinations of explanatory matrix *X*. 
+
+***
+
+# Sources
+
+What This Lecture is Adapted From
+
+- [Workshop 9: Multivariate Analyses in R](https://r.qcbs.ca/workshop09/book-en/index.html)
+- [Workshop 10: Advanced Multivariate Analyses in R](https://r.qcbs.ca/workshop10/book-en/index.html)
+
+More Information About Ordination 
+
+- [INTRODUCTION TO ORDINATION](https://ourcodingclub.github.io/tutorials/ordination/)
+- [Ordination Methods - an overview](https://ordination.okstate.edu/overview.htm)
+
+Principal Component Selection
+
+- [Principal Component Selection: The Broken-Stick Model](https://www.mohanwugupta.com/post/broken_stick/)
+- [STOPPING RULES IN PRINCIPAL COMPONENTS ANALYSIS: A COMPARISON OF HEURISTICAL AND STATISTICAL APPROACHES](https://esajournals.onlinelibrary.wiley.com/doi/epdf/10.2307/1939574?src=getftr)
+
+- [Ecological Applications in R: Introduction to Ordination](https://youtu.be/VU1yjK68yKQ?si=QWRZBB1iQ2t8L-3w)
+
+
+NMDS
+
+- [Ecological Applications in R, NMDS in R](https://youtu.be/OMrtxobDhrM?si=LoMLX6qveRi0G_FR)
+- [NMDS TUTORIAL IN R](https://jonlefcheck.net/2012/10/24/nmds-tutorial-in-r/)
+- [Stress scores](https://uw.pressbooks.pub/appliedmultivariatestatistics/chapter/nmds/#Stress)
+
+
+
