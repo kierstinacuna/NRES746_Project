@@ -260,6 +260,8 @@ calc_bc_dist(Y.hmm)
 
 Besides Euclidean distance, common **Metric** coefficients include **Chord distances** and **Jaccard's coefficient**. Another common **Semimetric coefficient** is **Sørensen's coefficient**. A final group of distance coefficients are **Nonmetric**, one of which is **Mahalanobis distance**. You can find out more about these distance coefficients [here](https://r.qcbs.ca/workshop09/book-en/types-of-distance-coefficients.html#bray-curtis-coefficient)
 
+***
+
 ## Unconstrained Ordination
 
 Unconstrained ordination methods are multivariate techniques used to visualize and explore relationships among variables or observations in a dataset without imposing any specific constraints on the relationships.
@@ -517,7 +519,7 @@ head(loading.scores)
 
 9.  Make a biplot of the Principal Components and Loading Scores
 
-```{r, fig.width = 9, fig.height = 9}
+```{r, fig.width = 8, fig.height = 8}
   # Set plot parameters
 par(mar = c(5, 5, 10, 5),
      mgp = c(2, 1, 0))
@@ -563,7 +565,9 @@ abline(v= 0, h = 0)
 PCA_princomp <- stats::princomp(spe.hel)
 biplot(PCA_princomp, xlim = c(-0.5,0.5), ylim = c(-0.5,0.5))
 abline(v= 0, h = 0)
+```
 
+``` {r, fig.height = 6, fig.width = 6}
   # Using vegan::rda()
 PCA_rda <- vegan::rda(spe.hel)
 biplot(PCA_rda)
@@ -579,13 +583,13 @@ us to change our visualization of the data to allow for different inferences.
 
 Type 2 scaling, which is the default, does not preserve approximation of Euclidean distance among sites. This scaling preserves the correlation between variables by their angles relative to each other.
 
-``` {r}
+``` {r, fig.height = 6, fig.width = 6}
 biplot(PCA_rda, scaling = 2)
 ```
 
 Type 1 scaling attempts to preserve Euclidean distance among sites, while the angles between variables are not meaningful.
 
-``` {r}
+``` {r, fig.height = 6, fig.width = 6}
 biplot(PCA_rda, scaling = 1)
 
 ```
@@ -617,7 +621,9 @@ spe.ca <- vegan::cca(species)
   # Scree Plot
   barplot(eig_vec_ca)
   abline(h = mean(eig_vec_ca), col = "red")
-  
+```
+
+```{r, fig.height = 6, fig.width = 6}
 # Plot CA
 plot(spe.ca, scaling = 2, type = "none", main = "CA",
      xlab = c("CA1"), ylab = c("CA2"))
@@ -654,19 +660,52 @@ ape::biplot.pcoa(spe.bc.pcoa, spe.hel, dir.axis2 = -1)
 ```
 
 ### Nonmetric MultiDimensional Scaling
-In PCA, CA and PCoA, a goal is to preserve distances among objects, yet a good portion of variation can be lost through principal component selection. 
-NMDS maintains a limited number of ordination axes to keep as much of the variation of the data set while 
+In PCA, CA and PCoA, a goal is to organize (ordinate) objects using using descriptors in full dimensional space. These descriptors are represented by axes which show the variation in descriptors among sites and preserves the distance among those sites. However, when creating a biplot to describe the space, a good portion of the variation can be lost by only showing two axes, while a portion of the variation is described by all the other axes.
 
+With NMDS, the relationship among objects is the priority over showing the distances between object. Additionally, the almost all of the variation among sites can be visualized with less than three axes. Therefore, the biplot produced by an NMDS is a better two dimensional representation of similarity between objects than PCA, CA, and PCoA. 
 
+Lets run an NMDS on the fish data:
 ``` {r}
 data(Doubs)
 species <- Doubs.fish[-8,]
 spe.h <- decostand(species, method = "hellinger")
 
 # Run the NMDS
-spe.nmds <- metaMDS(spe.h, distance = "bray", autotransform = F)
-spe.nmds
-
-ordiplot(spe.nmds, type = "t")
-
+spe.nmds <- vegan::metaMDS(spe.h,
+                           distance = "bray", # specify the distance coefficient to be calculated in the function
+                           k = 2, # specify the number of dimensions
+                           autotransform = F # indicates that transformation has already been applied to the data
+                           )
 ```
+
+When we run an NMDS, objects are first positioned in a random starting condition in the requested number of dimensions (default is 2). It then iteratively moves those objects and then calculates the Euclidean distances between all the objects in that configuration. It then does a pairwise comparison of those distances with the Euclidean distances in complete multidimensional space. That pairwise comparison is calculated as the Stress score, which can be interpreted as a goodness-of-fit of the distance adjustment in the reduced-space configuration. The lower the stress, the better the representation of objects in ordination space. NMDS continues to move objects in the requested number of dimensions until the stress score doesn't improve. That final configuration is the product of an NMDS.
+
+Stress scores lower than <0.2 are generally interpreted as there being a good visual representation of complete multidimensional space in the specified number of NMDS dimensions. <0.1 is great, and <0.05 is excellent, except that is rare.
+
+``` {r}
+# Stress
+spe.nmds$stress # A stress score <0.1. Great!
+```
+
+We can do a visual check of goodness-of-fit using a Shepard's plot.
+
+``` {r}
+stressplot(spe.nmds, main = "Shepard plot")
+```
+Each of the points represent pairwise comparisons of the objects. The high correlation we see here indicates that the pairwise comparisons between multidimensional space (Observed Dissimilarity) and the configuration of objects in two dimensions (Ordination Distance) are correlated (higher ordination distance = higher observed distance). Therefore, the NMDS in two dimensions is a good fit. 
+
+Now lets make a biplot.
+
+``` {r, fig.height = 7, fig.width = 7}
+vegan::ordiplot(spe.nmds, type = "t", xlim = c(-2,2),
+                ylim = c(-1.5, 1.5), main = "NMDS with Doubs Fish Species Community Abundance Data", sub = "Hellinger Transformed data with Bray-Curtis Coefficients")
+abline(v = 0, h = 0)
+```
+
+With an NMDS plot, we can say that sites close together have small Bray-Curtis distances, and therefore share species presences and also abundances. We can also see which fish species are contributing to those similarities. Like a PCA, the axes can later be used as latent variables used in other analyses that describe the environment or community.
+
+***
+
+## Contrained Ordination
+
+Now that we've covered a suite of common uncontrained ordination techniques, 
