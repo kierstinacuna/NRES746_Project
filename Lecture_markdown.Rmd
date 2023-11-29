@@ -733,7 +733,7 @@ ape::biplot.pcoa(spe.bc.pcoa, spe.hel, dir.axis1 = -1, dir.axis2 = -1)
 abline(v = 0, h = 0)
 ```
 
-As you can see, the PCoA that uses Euclidean distance is very similar to the PCA run on the same data. The biplot of the PCoA using the **Bray-Curtis distance** shows that the site positions are slightly different. Since we are working with a data set that contains lots of zeros, this biplot may be more reliable in allowing us to interpret the relationship of these sites among each other (since the scaling is set to type 1).
+As you can see, the PCoA that uses Euclidean distance is very similar to the PCA run on the same data. The biplot of the PCoA using the Bray-Curtis distance shows that the site positions are slightly different. Since we are working with a data set that contains lots of zeros, this biplot may be more reliable in allowing us to interpret the relationship of these sites among each other (since the scaling is set to type 1).
 
 
 ## Nonmetric MultiDimensional Scaling
@@ -785,7 +785,7 @@ vegan::ordiplot(spe.nmds, type = "t", xlim = c(-2,2),
 abline(v = 0, h = 0)
 ```
 
-With an NMDS plot, we can say that sites close together have small Bray-Curtis distances, and therefore share species presences and also abundances. We can also see which fish species are contributing to those similarities. Unlike a PCA, the axes cannot be used as a latent variable in further analysis, as the position of the data points along the axes are actually orders of points relative to each other.
+With an NMDS plot, we can say that sites close together have small **Bray-Curtis distances**, and therefore share species presences and also abundances. We can also see which fish species are contributing to those similarities. Unlike a PCA, the axes cannot be used as a latent variable in further analysis, as the position of the data points along the axes are actually orders of points relative to each other.
 
 ***
 
