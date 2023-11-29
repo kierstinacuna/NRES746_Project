@@ -118,15 +118,18 @@ calc_bc_dist(Y.hmm)
 
 ### Breaking Down a PCA ----
 
+
 # 1. Load the data set
 
 data(Doubs)
 species <- Doubs.fish[-8,]
 
+
 # 2. Apply a Hellinger transformation on the Species abundance data to standardize the data
 
 spe.hel <- as.data.frame(vegan::decostand(species, method = "hellinger"))
 head(spe.hel)
+
 
 # 3. Compute the Covariance Matrix
 
@@ -156,8 +159,6 @@ eigen_decomp <- eigen(cov_matrix)
 
   # Extract Eigenvalues
 (eig_values <- eigen_decomp$values)
-  # Eigenvalues are equal to the sum of squares of the distances of each projected data point in the corresponding principal component
-  # The sum of squares is maximized in the first principal component.
 
   # Extract Eigenvectors
 (eig_vectors <- -eigen_decomp$vectors)
@@ -166,6 +167,7 @@ rownames(eig_vectors) = colnames(spe.hel)
   # Extract the first two eigenvectors
 eig_vec_1 <- eig_vectors[,1]
 eig_vec_2 <- eig_vectors[,2]
+
 
 # 5. Show amount of variance contributed by each Principal Component by making a Scree Plot.
 
@@ -183,6 +185,7 @@ var_per <- data.frame(
 barplot(PER ~ PC, data = var_per,
         xlab = "Principal Components",
         ylab = "Percent of Variation %")
+
 
 # 6. Selecting Principal Components 
 
@@ -278,13 +281,10 @@ segments(x0 = ss$x0, x1 = ss$x1, y0 = ss$y0, y1 = ss$y1,col = 'orange')
 with(spe.hel, text(BAR ~ BLA, labels = as.factor(rownames(spe.hel)),pos = 1, cex=1))
 title(main = "First (Purple) and Second (Orange) Principal Component over the Standardized Data",
       cex.main = 0.8, sub = "Lines Horizontal to the Principal Components are the Variance", cex.sub = 0.75)
+
+
 # 8.Loading Scores
 
-  # Elements of each eigenvector are called loadings and can be interpreted as the contribution of each variable in the data set to 
-  # the corresponding principal component.
-
-  # You can make a table with these values and see the contributions of each variable to each principal component:
-  
   # Get variable loading scores
 variable.loads <- data.frame(
   PC01 = eig_vec_1, # First eigenvector
@@ -357,25 +357,25 @@ PCA_rda <- vegan::rda(spe.hel)
 biplot(PCA_rda, scaling = 2)
 biplot(PCA_rda, scaling = 1)
 
-### Scaling
+  # Scaling
 
-  # Type 2 scaling
+    # Type 2 scaling
 biplot(PCA_rda, scaling = 2)
 
-  # Type 1 scaling
+    # Type 1 scaling
 biplot(PCA_rda, scaling = 1)
 
 
-## Correspondance Analysis ----
+## Correspondence Analysis ----
 
   # Run the CA using the cca() function in the vegan package
-
     # Load data
 data(Doubs)
 species <- Doubs.fish[-8,]
+spe.hel <- decostand(species, method = "hellinger")
 
     # Run CA using the vegan package
-spe.ca <- vegan::cca(species)
+spe.ca <- vegan::cca(spe.hel)
 
     # Identify the eigenvectors using the Kaiser-Guttman Criterion
 eig_vec_ca <- spe.ca$CA$eig
@@ -386,12 +386,15 @@ barplot(eig_vec_ca)
 abline(h = mean(eig_vec_ca), col = "red")
 
   # Plot CA
+
+    # Scaling Type 2
 plot(spe.ca, scaling = 2, type = "none", main = "CA",
      xlab = c("CA1"), ylab = c("CA2"))
 
-  # Extract Site and Species Scores
+      # Extract site and species scores
 ca.site.scores <- vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 2)
 
+      # Plot site scores
 points(ca.site.scores,
        pch = 21, col = "black", bg = "steelblue", cex = 1.2)
 
@@ -399,25 +402,49 @@ text(ca.site.scores,
      labels = as.factor(rownames(vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 2))),pos = 1, cex=1,
                           col = "black")
 
+      # Plot species scores
 text(vegan::scores(spe.ca, display = "species", choices = c(1), scaling = 2),
      vegan::scores(spe.ca, display = "species", choices = c(2), scaling = 2),
      labels = rownames(scores(spe.ca, display = "species", scaling = 2)),
      col = "red", cex = 0.8)
 
+    # Scaling Type 1
+plot(spe.ca, scaling = 1, type = "none", main = "CA",
+     xlab = c("CA1"), ylab = c("CA2"))
+
+      # Extract Site and Species Scores
+ca.site.scores <- vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 1)
+
+      # Plot site scores
+points(ca.site.scores,
+       pch = 21, col = "black", bg = "steelblue", cex = 1.2)
+
+text(ca.site.scores,
+     labels = as.factor(rownames(vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 1))),pos = 1, cex=1,
+     col = "black")
+
+      # Plot species scores
+text(vegan::scores(spe.ca, display = "species", choices = c(1), scaling = 1),
+     vegan::scores(spe.ca, display = "species", choices = c(2), scaling = 1),
+     labels = rownames(scores(spe.ca, display = "species", scaling = 2)),
+     col = "red", cex = 0.8)
+
+
 ## Principal Coordinate Analysis ----
 
-  # Use the pcoa() function in the ape package to run a PCoA
-spe.h.pcoa <- ape::pcoa(dist(spe.hel))
-    # Plot PCoA biplot
-ape::biplot.pcoa(spe.h.pcoa, spe.hel)
+# Use the pcoa() function in the ape package to run a PCoA using Euclidean distance.
+spe.h.pcoa <- ape::pcoa(dist(spe.hel, method = "euclidean")) # Calculating the Euclidean distances of the hellinger transformed species data set.
+  # Plot PCoA biplot
+ape::biplot.pcoa(spe.h.pcoa, spe.hel, dir.axis1 = -1)
 
-  # Run a PcoA with Bray-Curtis distance
-    # Calculate Bray-Curtis coefficients
-spe.bc <- vegan::vegdist(species, method = "bray")
-    # Run PCoA
+# Run a PcoA with Bray-Curtis distance
+  # Calculate Bray-Curtis coefficients
+spe.bc <- vegan::vegdist(species, method = "bray") # Calculating the Bray-Curtis distances
+# Run PCoA
 spe.bc.pcoa <- ape::pcoa(spe.bc)
-    # Plot PCoA biplot
-ape::biplot.pcoa(spe.bc.pcoa, spe.hel, dir.axis2 = -1)
+  # Plot PCoA biplot
+ape::biplot.pcoa(spe.bc.pcoa, spe.hel, dir.axis1 = -1, dir.axis2 = -1)
+
 
 ## Nonmetric MultiDimensional Scaling ----
 
