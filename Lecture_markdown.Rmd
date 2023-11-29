@@ -730,7 +730,7 @@ vegan::ordiplot(spe.nmds, type = "t", xlim = c(-2,2),
 abline(v = 0, h = 0)
 ```
 
-With an NMDS plot, we can say that sites close together have small Bray-Curtis distances, and therefore share species presences and also abundances. We can also see which fish species are contributing to those similarities. Unlike a PCA, the axes cannot be used as a latent variable in further analysis, the position of the data points along the axes are actually ordering of points relative to each other.
+With an NMDS plot, we can say that sites close together have small Bray-Curtis distances, and therefore share species presences and also abundances. We can also see which fish species are contributing to those similarities. Unlike a PCA, the axes cannot be used as a latent variable in further analysis, as the position of the data points along the axes are actually ordering of points relative to each other.
 
 ***
 
@@ -740,9 +740,11 @@ In contrast to Unconstrained ordination, Constrained Ordination requires prior k
 
 Unlike Unconstrained Ordination, Constrained Ordination can be used to test hypotheses about the relationship between the environmental variables and species composition. It can partition the variance of species composition into the fraction explained by environmental variables (associated with constrained ordination axes), and not explained by environmental variables (unconstrained ordiation axes).   
 
-There are three ways you can work with environmental variables in the context of Constrained Ordination. The first is [Forward Selection](https://www.davidzeleny.net/anadat-r/doku.php/en:forward_sel), which is the selection of environmental variables relevant to species composition. The second is [Monte Carlo permutation test](https://www.davidzeleny.net/anadat-r/doku.php/en:monte_carlo), which aims to test the significance of the variance explained by chosen environmental factors. And finally [variance partitioning](https://www.davidzeleny.net/anadat-r/doku.php/en:varpart), which is partitioning the variance.
+There are three ways you can work with environmental variables in the context of Constrained Ordination. The first is [Forward Selection](https://www.davidzeleny.net/anadat-r/doku.php/en:forward_sel), which is the selection of environmental variables relevant to species composition. The second is the [Monte Carlo permutation test](https://www.davidzeleny.net/anadat-r/doku.php/en:monte_carlo), which aims to test the significance of the variance explained by chosen environmental factors. And finally [variance partitioning](https://www.davidzeleny.net/anadat-r/doku.php/en:varpart), which is partitioning the variance by individual environmental variables or combinations of environmental variables.
 
 The two most common Constrained Ordination techniques are Redundancy Analysis (RDA) and Constrained Correspondence Analysis (CCA). RDA can be thought of as the constrained form of PCA, while CCA is the constrained form of Correspondence Analysis. 
+
+We won't go into Canonical Correspondence Analysis in this lecture but more information can be found [here](https://ordination.okstate.edu/overview.htm#Canonical_Correspondence_Analysis). 
 
 ## Redundancy Analysis
 
@@ -757,8 +759,6 @@ Like PCA, explanatory variables can be quantitative, qualitative, and/or binary.
 ![](images/Lab_1.png){Width="60%"}
 
 2. Then, we run a PCA on the matrix of fitted values **Y**~***fit***~. Just like before, PCA produces eigenvalues and eigenvectors, but in RDA we call these canonical axes. These axes are stored in a matrix ***Z***, which correspond to the linear combinations of the explanatory variables in ***X***. In analyzing community composition, these canonical axes are interpreted as complex environmental gradients. 
-
-We won't go into Canonical Correspondence Analysis in this lecture but more information can be found [here](https://ordination.okstate.edu/overview.htm#Canonical_Correspondence_Analysis). 
 
 For the lab, we'll go through a Redundancy Analysis on the Doubs fish data set.
 
