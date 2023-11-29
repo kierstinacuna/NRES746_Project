@@ -202,6 +202,13 @@ barplot(EV ~ PC, data = eig_val_PC,
         ylab = "Eigenvalues")
 abline(h = mean(eig_values), col = "red")
 
+# If we use the Kaiser-Guttman Criterion, we can how much how much variation is 
+# captured by the 5 selected principal components.
+
+eig_vec_kgc <- eig_values[eig_values > mean(eig_values)]
+
+sum(var_per$PER[1:length(eig_vec_kgc)])
+
   # Broken stick Model
 broken_stick <- function(eig_values) {
   # Calculate Broken Stick Model
@@ -228,13 +235,6 @@ broken_stick <- function(eig_values) {
 }
 
 broken_stick(eig_values)
-
-# If we use the Kaiser-Guttman Criterion, we can how much how much variation is 
-# captured by the 5 selected principal components.
-
-eig_vec_kgc <- eig_values[eig_values > mean(eig_values)]
-
-sum(var_per$PER[1:length(eig_vec_kgc)])
 
 
 # 7. Plot the Principal Components over the data
