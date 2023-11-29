@@ -768,7 +768,7 @@ vegan::ordiplot(spe.nmds, type = "t", xlim = c(-2,2),
 abline(v = 0, h = 0)
 ```
 
-With an NMDS plot, we can say that sites close together have small Bray-Curtis distances, and therefore share species presences and also abundances. We can also see which fish species are contributing to those similarities. Unlike a PCA, the axes cannot be used as a latent variable in further analysis, as the position of the data points along the axes are actually ordering of points relative to each other.
+With an NMDS plot, we can say that sites close together have small Bray-Curtis distances, and therefore share species presences and also abundances. We can also see which fish species are contributing to those similarities. Unlike a PCA, the axes cannot be used as a latent variable in further analysis, as the position of the data points along the axes are actually orders of points relative to each other.
 
 ***
 
