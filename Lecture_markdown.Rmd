@@ -348,13 +348,13 @@ head(cov_base_func)
 
 4.  Perform the Eigen-decomposition of the covariance matrix
 
-Eigendecomposition is a fancy way of saying to calculate the eigenvectors and eigenvalues of a matrix. The eigenvectors represent the directions in covariance space that capture the maximum amount of variance explained by the eigenvectors in the data, and the eigenvalues indicate the amount of variance captured by each eigenvector.
+Eigendecomposition is a fancy way of saying to calculate the eigenvectors and eigenvalues of a matrix. The eigenvectors represent the directions in covariance space that capture the maximum amount in the data, and the eigenvalues indicate the amount of variance captured by each eigenvector.
 
 Visually, you think of an eigenvector below:
 
 ![](images/Lecture_15.png)
 
-Where the black line running through the data represents an eigenvector which captures the most amount of variance of the data. For a PCA, this eigenvector represents the **first principal component**. The **second principal component** would be orthogonal to this eigenvector, as seen below:
+Where the black line running through the data represents the eigenvector that captures the most amount of variance in the data. For a PCA, this eigenvector represents the **first principal component**. The **second principal component** would be orthogonal to this eigenvector, as seen below:
 
 ![](images/Lecture_16.png)
 
