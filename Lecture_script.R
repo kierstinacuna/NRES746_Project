@@ -337,7 +337,7 @@ with(variable.loads, text(PC02 ~ PC01, labels = as.factor(rownames(variable.load
 title(main = "Biplot of Site and Variable Loading Scores against the First and Second Principal Components",
       cex.main = 0.9)
 
-### PCA analysis using built-in functions ----
+### PCA using built-in functions ----
 
 par(mar = c(5, 4, 4, 2) + 0.1,mgp = c(3, 1, 0))
 
@@ -357,13 +357,14 @@ PCA_rda <- vegan::rda(spe.hel)
 biplot(PCA_rda, scaling = 2)
 biplot(PCA_rda, scaling = 1)
 
-  # Scaling
+### Scaling ---
 
-    # Type 2 scaling
+# Type 2 scaling
 biplot(PCA_rda, scaling = 2)
 
-    # Type 1 scaling
+# Type 1 scaling
 biplot(PCA_rda, scaling = 1)
+
 
 
 ## Correspondence Analysis ----
@@ -372,10 +373,9 @@ biplot(PCA_rda, scaling = 1)
     # Load data
 data(Doubs)
 species <- Doubs.fish[-8,]
-spe.hel <- decostand(species, method = "hellinger")
 
     # Run CA using the vegan package
-spe.ca <- vegan::cca(spe.hel)
+spe.ca <- vegan::cca(species)
 
     # Identify the eigenvectors using the Kaiser-Guttman Criterion
 eig_vec_ca <- spe.ca$CA$eig
@@ -387,30 +387,10 @@ abline(h = mean(eig_vec_ca), col = "red")
 
   # Plot CA
 
-    # Scaling Type 2
-plot(spe.ca, scaling = 2, type = "none", main = "CA",
-     xlab = c("CA1"), ylab = c("CA2"))
-
-      # Extract site and species scores
-ca.site.scores <- vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 2)
-
-      # Plot site scores
-points(ca.site.scores,
-       pch = 21, col = "black", bg = "steelblue", cex = 1.2)
-
-text(ca.site.scores,
-     labels = as.factor(rownames(vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 2))),pos = 1, cex=1,
-                          col = "black")
-
-      # Plot species scores
-text(vegan::scores(spe.ca, display = "species", choices = c(1), scaling = 2),
-     vegan::scores(spe.ca, display = "species", choices = c(2), scaling = 2),
-     labels = rownames(scores(spe.ca, display = "species", scaling = 2)),
-     col = "red", cex = 0.8)
-
     # Scaling Type 1
-plot(spe.ca, scaling = 1, type = "none", main = "CA",
-     xlab = c("CA1"), ylab = c("CA2"))
+plot(spe.ca, scaling = 1, type = "none",
+     xlab = c("CA1"), ylab = c("CA2"),
+     main = "Correspondence Analysis Biplot with Scaling Type 1")
 
       # Extract Site and Species Scores
 ca.site.scores <- vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 1)
@@ -418,7 +398,6 @@ ca.site.scores <- vegan::scores(spe.ca, display = "sites", choices = c(1, 2), sc
       # Plot site scores
 points(ca.site.scores,
        pch = 21, col = "black", bg = "steelblue", cex = 1.2)
-
 text(ca.site.scores,
      labels = as.factor(rownames(vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 1))),pos = 1, cex=1,
      col = "black")
@@ -426,6 +405,27 @@ text(ca.site.scores,
       # Plot species scores
 text(vegan::scores(spe.ca, display = "species", choices = c(1), scaling = 1),
      vegan::scores(spe.ca, display = "species", choices = c(2), scaling = 1),
+     labels = rownames(scores(spe.ca, display = "species", scaling = 2)),
+     col = "red", cex = 0.8)
+
+    # Scaling Type 2
+plot(spe.ca, scaling = 2, type = "none",
+     xlab = c("CA1"), ylab = c("CA2"),
+     main = "Correspondence Analysis Biplot with Scaling Type 2")
+
+      # Extract site and species scores
+ca.site.scores <- vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 2)
+
+      # Plot site scores
+points(ca.site.scores,
+       pch = 21, col = "black", bg = "steelblue", cex = 1.2)
+text(ca.site.scores,
+     labels = as.factor(rownames(vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 2))),pos = 1, cex=1,
+     col = "black")
+
+      # Plot species scores
+text(vegan::scores(spe.ca, display = "species", choices = c(1), scaling = 2),
+     vegan::scores(spe.ca, display = "species", choices = c(2), scaling = 2),
      labels = rownames(scores(spe.ca, display = "species", scaling = 2)),
      col = "red", cex = 0.8)
 
@@ -456,7 +456,7 @@ species <- Doubs.fish[-8,]
 spe.h <- decostand(species, method = "hellinger")
 
   # Run the NMDS
-spe.nmds <- vegan::metaMDS(spe.h,
+spe.nmds <- vegan::metaMDS(species,
                            distance = "bray", # specify the distance coefficient to be calculated in the function
                            k = 2, # specify the number of dimensions
                            autotransform = F # indicates that transformation has already been applied to the data

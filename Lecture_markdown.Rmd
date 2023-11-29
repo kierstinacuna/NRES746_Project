@@ -574,6 +574,9 @@ title(main = "Biplot of Site and Variable Loading Scores against the First and S
       cex.main = 0.9)
 ```
 
+
+### PCA using built-in functions
+
 PCA analysis using the prcomp() function
 
 ```{r}
@@ -604,20 +607,27 @@ The second principal component (PC2) is orthogonal of PC1 and can be interpreted
 ### Scaling
 
 One last note is that the biplot function has a scaling argument that allows
-us to change our visualization of the data to allow for different inferences.
+us to change our visualization of the data to allow for different inferences. There is no single way to optimally show objects and variables in a biplot
 
-Type 2 scaling, which is the default, does not preserve approximation of Euclidean distance among sites. This scaling preserves the correlation between variables by their angles relative to each other.
+Type 2 scaling, which is the default, does not preserve approximation of Euclidean distance among sites. This scaling preserves the correlation between variables by their angles relative to each other. This is the best option if the goal is to focus on the relationships between descriptors.
 
 ``` {r, fig.height = 6, fig.width = 6}
 biplot(PCA_rda, scaling = 2)
 ```
 
-Type 1 scaling attempts to preserve Euclidean distance among sites, while the angles between variables are not meaningful.
+Type 1 scaling attempts to preserve Euclidean distance among sites, while the angles between variables are not meaningful. This option is best if the goal is to interpret relationships among objects.
 
 ``` {r, fig.height = 6, fig.width = 6}
 biplot(PCA_rda, scaling = 1)
 
 ```
+
+
+### Using Principal Components in Further Analyses Example
+
+One example of using principal components in further analyses comes from a study done on fish communities in stream fragments in the Great Plains (Perkins et al. 2015). In this study, the longitudinal length of the stream fragments (length), the average amount of flow (discharge), and number of days without flow (dry) were measured. The first principal component (PC1) represents a gradient from large rivers with high discharge (negative PC1 values), to short rivers with low discharge and may days without flow (positive PC1 values). Community attributes are consequently regressed against PC1. 
+
+![](images/Lecture_17.jpg){Width="40%"}
 
 ***
 
@@ -637,10 +647,9 @@ We'll run a quick CA using the same fish data set.
   # Load data
 data(Doubs)
 species <- Doubs.fish[-8,]
-spe.hel <- decostand(species, method = "hellinger")
 
   # Run CA using the vegan package
-spe.ca <- vegan::cca(spe.hel)
+spe.ca <- vegan::cca(species)
 
   # Identify the eigenvectors using the Kaiser-Guttman Criterion
 eig_vec_ca <- spe.ca$CA$eig
@@ -653,30 +662,11 @@ abline(h = mean(eig_vec_ca), col = "red")
 
 Now lets make a biplot of the CA.
 ```{r, fig.height = 6, fig.width = 6}
-# Scaling Type 2
-plot(spe.ca, scaling = 2, type = "none", main = "CA",
-     xlab = c("CA1"), ylab = c("CA2"))
-
-  # Extract site and species scores
-ca.site.scores <- vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 2)
-
-  # Plot site scores
-points(ca.site.scores,
-       pch = 21, col = "black", bg = "steelblue", cex = 1.2)
-
-text(ca.site.scores,
-     labels = as.factor(rownames(vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 2))),pos = 1, cex=1,
-                          col = "black")
-
-  # Plot species scores
-text(vegan::scores(spe.ca, display = "species", choices = c(1), scaling = 2),
-     vegan::scores(spe.ca, display = "species", choices = c(2), scaling = 2),
-     labels = rownames(scores(spe.ca, display = "species", scaling = 2)),
-     col = "red", cex = 0.8)
-
 # Scaling Type 1
-plot(spe.ca, scaling = 1, type = "none", main = "CA",
-     xlab = c("CA1"), ylab = c("CA2"))
+plot(spe.ca, scaling = 1, type = "none",
+     xlab = c("CA1"), ylab = c("CA2"),
+     main = "Correspondence Analysis Biplot with Scaling Type 1")
+
 
   # Extract Site and Species Scores
 ca.site.scores <- vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 1)
@@ -684,7 +674,6 @@ ca.site.scores <- vegan::scores(spe.ca, display = "sites", choices = c(1, 2), sc
   # Plot site scores
 points(ca.site.scores,
        pch = 21, col = "black", bg = "steelblue", cex = 1.2)
-
 text(ca.site.scores,
      labels = as.factor(rownames(vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 1))),pos = 1, cex=1,
      col = "black")
@@ -695,7 +684,32 @@ text(vegan::scores(spe.ca, display = "species", choices = c(1), scaling = 1),
      labels = rownames(scores(spe.ca, display = "species", scaling = 2)),
      col = "red", cex = 0.8)
 
+# Scaling Type 2
+plot(spe.ca, scaling = 2, type = "none",
+     xlab = c("CA1"), ylab = c("CA2"),
+     main = "Correspondence Analysis Biplot with Scaling Type 2")
+
+  # Extract site and species scores
+ca.site.scores <- vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 2)
+
+  # Plot site scores
+points(ca.site.scores,
+       pch = 21, col = "black", bg = "steelblue", cex = 1.2)
+text(ca.site.scores,
+     labels = as.factor(rownames(vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 2))),pos = 1, cex=1,
+                          col = "black")
+
+  # Plot species scores
+text(vegan::scores(spe.ca, display = "species", choices = c(1), scaling = 2),
+     vegan::scores(spe.ca, display = "species", choices = c(2), scaling = 2),
+     labels = rownames(scores(spe.ca, display = "species", scaling = 2)),
+     col = "red", cex = 0.8)
+
 ```
+
+With type 1 scaling of a CA biplot, sites that are close to one another are likely to be relatively similar in their species relative frequencies. Additionally, any site found near the point representing a species is likely to contain a high contribution of that species. 
+
+With type 2 scaling of a CA biplot, species that are close to one another are likely to have relatively similar frequencies along the sites. Additionally, any species that lies close to an site is likely to be found in that site or have a higher frequency in that site compared to sites further away.  
 
 
 ## Principal Coordinate Analysis
@@ -708,6 +722,7 @@ We'll run a PCoA on the Doubs fish data set below:
 spe.h.pcoa <- ape::pcoa(dist(spe.hel, method = "euclidean")) # Calculating the Euclidean distances of the hellinger transformed species data set.
   # Plot PCoA biplot
 ape::biplot.pcoa(spe.h.pcoa, spe.hel, dir.axis1 = -1)
+abline(v = 0, h = 0)
 
   # Run a PcoA with Bray-Curtis distance
     # Calculate Bray-Curtis coefficients
@@ -716,8 +731,11 @@ spe.bc <- vegan::vegdist(species, method = "bray") # Calculating the Bray-Curtis
 spe.bc.pcoa <- ape::pcoa(spe.bc)
     # Plot PCoA biplot
 ape::biplot.pcoa(spe.bc.pcoa, spe.hel, dir.axis1 = -1, dir.axis2 = -1)
-
+abline(v = 0, h = 0)
 ```
+
+As you can see, the PCoA that uses Euclidean distance is very similar to the PCA run on the same data. The biplot of the PCoA using the Bray-Curtis distance shows that the site positions are slightly different. Since we are working with a data set that contains lots of zeros, this biplot may be more reliable in allowing us to interpret the relationship of these sites among each other (since the scaling is set to type 1).
+
 
 ## Nonmetric MultiDimensional Scaling
 In PCA, CA and PCoA, a goal is to organize (ordinate) objects using using descriptors in full dimensional space. These descriptors are represented by axes which show the variation in descriptors among sites and preserves the distance among those sites. However, when creating a biplot to describe the space, a good portion of the variation can be lost by only showing two axes, while a portion of the variation is described by all the other axes.
@@ -798,16 +816,22 @@ Like PCA, explanatory variables can be quantitative, qualitative, and/or binary.
 
 2. Then, we run a PCA on the matrix of fitted values **Y**~***fit***~. Just like before, PCA produces eigenvalues and eigenvectors, but in RDA we call these canonical axes. These axes are stored in a matrix ***Z***, which correspond to the linear combinations of the explanatory variables in ***X***. In analyzing community composition, these canonical axes are interpreted as complex environmental gradients. 
 
-For the lab, we'll go through a Redundancy Analysis on the Doubs fish data set.
+For the lab, we'll conduct a Redundancy Analysis on the Doubs fish data set.
 
 ***
 
-# Sources
+# Citations/SOurces
 
 More Information About Ordination 
 
 - [INTRODUCTION TO ORDINATION](https://ourcodingclub.github.io/tutorials/ordination/)
 - [Ordination Methods - an overview](https://ordination.okstate.edu/overview.htm)
+- Borcard, Daniel., Gillet, Francois., & Legendre, Pierre. (2011). Numerical Ecology with R (1st ed. 2011.). Springer New York. https://doi.org/10.1007/978-1-4419-7976-6
+
+Principal Components
+
+- Perkin, J. S., Gido, K. B., Cooper, A. R., Turner, T. F., Osborne, M. J., Johnson, E. R., & Mayes, K. B. (2015). Fragmentation and dewatering transform Great Plains stream fish communities. Ecological Monographs, 85(1), 73–92. https://doi.org/10.1890/14-0121.1
+
 
 Principal Component Selection
 
