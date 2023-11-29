@@ -19,11 +19,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Outline
 
 1.  Introduction
-2.  Definition of Ordination
-3.  Review of Matrices and Matrix Algebra
-4.  Dissimilarity Measures/Distance Coefficients
-5.  Unconstrained Ordination
-6.  Constrained Ordination
+2.  Dissimilarity Measures/Distance Coefficients
+3.  Unconstrained Ordination
+4.  Constrained Ordination
 
 R Script for this lab can be found [here](Lecture_script.R).
 
@@ -350,7 +348,7 @@ head(cov_base_func)
 
 4.  Perform the Eigen-decomposition of the covariance matrix
 
-Eigendecomposition is a fancy way of saying to calculate the eigenvectors and eigenvalues of a matrix. The eigenvectors represent the directions in covariance space that capture the maximum amount of variance in the data, and the eigenvalues indicate the amount of variance captured by each eigenvector.
+Eigendecomposition is a fancy way of saying to calculate the eigenvectors and eigenvalues of a matrix. The eigenvectors represent the directions in covariance space that capture the maximum amount of variance explained by the eigenvectors in the data, and the eigenvalues indicate the amount of variance captured by each eigenvector.
 
 Visually, you think of an eigenvector below:
 
@@ -820,7 +818,7 @@ For the lab, we'll conduct a Redundancy Analysis on the Doubs fish data set.
 
 ***
 
-# Citations/SOurces
+# Citations/Sources
 
 More Information About Ordination 
 
