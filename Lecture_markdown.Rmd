@@ -458,7 +458,9 @@ broken_stick(eig_values)
 ```
 
 
-While these methods are common in selecting principal components, sometimes selection involves contextualizing your questions. Depending on how you want to understand how specific variables/species vary, selecting the principal components which explain the variance associated with those variables/species is the appropriate selection method.
+While these methods are common in selecting principal components, sometimes selection involves contextualizing your research questions. You may want to select the principal components that explain the variance associated with the variables and/or species important to your research. 
+  
+For example, say you are interested in how sites are grouped based on a rare species. While PC 1 will likely capture the most variance in your data out of all the PC's, it may not capture the variance attributable to the rare species of interest. Instead, PC 30 might capture the variance caused by your rare species, and so you may want to select PC 30 for further analysis, even though PC 30 probably captures a small amount of variance from the data relative to the other PC's.
 
 7.  Plot the Principal Components over the data
 
