@@ -283,19 +283,17 @@ These methods are called "unconstrained" because they do not require prior knowl
 
 Unconstrained ordination methods work by representing the variables or observations in a lower-dimensional space, such as a two-dimensional or three-dimensional plot, while preserving the overall structure of the data.
 
-Some common unconstrained ordination methods include **principal component analysis (PCA)**, **correspondence analysis (CA)**, **principal coordinates analysis (PCoA)**, and **multidimensional scaling (MDS)**. These methods can be applied to a wide range of ecological data, including species abundance data, environmental data, and community similarity matrices.
+Some common unconstrained ordination methods include **principal component analysis (PCA)**, **correspondence analysis (CA)**, **principal coordinates analysis (PCoA)**, and **nonmetric multidimensional scaling (NMDS)**. These methods can be applied to a wide range of ecological data, including species abundance data, environmental data, and community similarity matrices.
 
-Overall, unconstrained ordination methods are widely used in ecology to explore patterns and relationships among biological communities and environmental variables. These methods are valuable tools for identifying key factors that influence community composition and structure, and for developing hypotheses about the underlying ecological processes that drive these patterns.
+Overall, unconstrained ordination methods are widely used in community ecology to explore patterns and relationships among biological communities and environmental variables. These methods are valuable tools for identifying key factors that influence community composition and structure, and for developing hypotheses about the underlying ecological processes that drive these patterns.
 
 ## Principal Component Analysis
 
 Principal Component Analysis (PCA) is a statistical technique used to reduce the dimensionality of a data set while retaining most of its variability. It's more common uses are analyzing environmental gradients.
 
-It is a linear transformation method that converts the original set of variables into a new set of linearly uncorrelated variables, called principal components (PCs), which are sorted in decreasing order of variance.
+It is a linear transformation method that converts the original set of variables into a new set of linearly uncorrelated variables, called principal components (PCs), which are sorted in decreasing order of variance. The resulting principal components are orthogonal to each other, meaning that they are not correlated, and their order reflects their importance in explaining the variability of the data.
 
 PCA has become one of the most commonly used techniques in data analysis due to its ability to identify hidden patterns and reduce the complexity of high-dimensional data.
-
-In essence, PCA aims to find the linear combinations of the original variables that account for the largest possible amount of variation in the data set. The resulting principal components are orthogonal to each other, meaning that they are not correlated, and their order reflects their importance in explaining the variability of the data.
 
 Note: PCA uses Euclidean distances to calculate similarities in data sets.
 
@@ -319,6 +317,7 @@ head(spe.hel)
 
 3.  Compute the Covariance Matrix
 
+Covariance indicates the direction of the linear relationship between two variables. A positive covariance have a positive relationship, while a negative indicates that they do not. Zero indicates no relationship. It is unlike correlation in that it doesn't tell us the strength of the relationship between two variables.
 ```{r}
   # Compute covarience matrix by hand
 comp_cov <- function(data) {
