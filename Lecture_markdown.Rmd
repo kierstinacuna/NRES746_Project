@@ -634,7 +634,7 @@ One example of using principal components in further analyses comes from a study
 
 Like PCA, Correspondence Analysis (CA) is another technique to reduce the dimensionality of a data set. However, the difference is the use of Chi^2^ distances instead of the Euclidean distances as used in PCA. This feature is better for species abundance data sets where the species distribution is unimodal or where there are lots of zeros. Using a PCA with a unimodal species distribution can lead to a phenomenon called a "horseshoe" effect", which can occur with long ecological gradients.
 
-More information about the "horseshoe effect" can be found [here](https://ordination.okstate.edu/PCA.htm)
+More information about the "horseshoe effect" can be found [here](https://ordination.okstate.edu/PCA.htm).
 
 When conducting a CA, the only difference to a PCA is that the raw data are first transformed into a matrix of cell-by-cell contributions to the Pearson Chi^2^ statistic. Then an eigendecomposition is placed on the resulting matrix, just as in PCA. 
 
