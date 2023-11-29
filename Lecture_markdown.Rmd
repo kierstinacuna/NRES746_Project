@@ -592,9 +592,9 @@ PCA_rda <- vegan::rda(spe.hel)
 biplot(PCA_rda)
 ```
 
-We can analyze these plots by remembering that our Principal components are linear combinations through our variables. The first principal component (PC1) is most correlated with the species variables that are vertical, as they are all along the same axis. As we move negatively along PC1, we increase in species which have arrows that face downwards, while simultaneously decreasing in abundance with species which have arrows that face upwards. Therefore, PC1 is summarizing these variables, and can further be used as explanatory variables in other analyses. An important thing to remember is that principal components are latent variables and that when interpreting them, you have to know how they are related to the original variables.
+We can analyze these plots by remembering that our Principal components are linear combinations through our variables. The first principal component (PC1) is most correlated with the species variables that are horizontal, as they are all along the same axis. As we move negatively along PC1, we increase in species which have arrows that face to the left, while simultaneously decreasing in abundance with species which have arrows that face to the right Therefore, since Euclidean distance is preserved, PC1 is summarizing these variables and can further be used as explanatory variables in other analyses. An important thing to remember is that principal components are latent variables and that when interpreting them, you have to know how they are related to the original variables.
 
-The second principal component is orthogonal of principal component 2(PC2) and can be interpreted independently of PC1. You can therefore make other species inferences by moving along PC2.
+The second principal component (PC2) is orthogonal of PC1 and can be interpreted independently of PC1. You can therefore make other species inferences by moving along PC2.
 
 ### Scaling
 
