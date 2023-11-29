@@ -740,7 +740,7 @@ The two most common Constrained Ordination techniques are Redundancy Analysis (R
 
 ## Redundancy Analysis
 
-The Redundancy Analysis models the effect of an explanatory matrix on a **response matrix**. That idea is important, as we have usually only have one response varaible in our models. A summary of the technique is that an ordination is done on a response matrix **Y** to obtain ordination axes that are linear combinations of explanatory matrix **X**. 
+The Redundancy Analysis models the effect of an explanatory matrix on a **response matrix**. This is an important distinction from the models we've made so far, which have only had one response variable. A summary of the technique is that an ordination is done on a response matrix **Y** to obtain ordination axes that are linear combinations of explanatory matrix **X**. 
 
 Like PCA, explanatory variables can be quantitative (centered, standardized, transformed or normalized, and collinearity reduced), qualitative, and binary variables. 
 
