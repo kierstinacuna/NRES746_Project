@@ -569,14 +569,17 @@ title(main = "Biplot of Site and Variable Loading Scores against the First and S
       cex.main = 0.9)
 ```
 
-PCA analysis using the princomp() function
+PCA analysis using the prcomp() function
 
 ```{r}
    # Using stats: prcomp()
 PCA_prcomp <- stats::prcomp(spe.hel)
 biplot(PCA_prcomp, xlim = c(-0.5,0.5), ylim = c(-0.5,0.5))
 abline(v= 0, h = 0)
+```
 
+PCA analysis using the princomp() function
+``` {r}
   # Using stats: princomp()
 PCA_princomp <- stats::princomp(spe.hel)
 biplot(PCA_princomp, xlim = c(-0.5,0.5), ylim = c(-0.5,0.5))
