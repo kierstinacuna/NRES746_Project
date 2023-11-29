@@ -403,7 +403,7 @@ barplot(PER ~ PC, data = var_per,
 
 6.  Selecting Principal Components
 
-It is generally a good idea to select the principal components that explain most of the variance in the data. Generally, selecting principal components is a subjective process. There is no objectively correct method for choosing principal componentss. However, there are established methods used by community ecologists.
+It is generally a good idea to select the principal components that explain most of the variance in the data. Generally, selecting principal components is a subjective process. There is no objectively correct method for choosing principal components. However, there are established methods used by community ecologists.
 
 The most common method is the **Kaiser-Guttman Criterion**, which states that any eigenvector with an eigenvalue greater than the mean eigenvalue should be retained.
 
@@ -456,6 +456,9 @@ broken_stick <- function(eig_values) {
 
 broken_stick(eig_values)
 ```
+
+
+While these methods are common in selecting principal components, sometimes selection involves contextualizing your questions. Depending on how you want to understand how specific variables/species vary, selecting the principal components which explain the variance associated with those variables/species is the appropriate selection method.
 
 7.  Plot the Principal Components over the data
 
