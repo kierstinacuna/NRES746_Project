@@ -225,7 +225,7 @@ Using the same data set above, we can calculate the Bray-Curtis coefficient usin
 
 ```
 
-Again, lower numbers indicate higher similarities. In contrast to the Euclidean coefficient, the Bray-Curtis coefficient between site 1 and site 3 indicates that these sites are less similar compared to their relationship with site 2. Therefore, the Bray-Curtis coefficient is better at capturing site differences with species abundances which helps deal with the **double-zero problem**.
+Again, lower numbers indicate higher similarities. In contrast to the Euclidean coefficient, the Bray-Curtis coefficient between site 1 and site 3 indicates that these sites are less similar compared to their relationship with site 2. Therefore, the Bray-Curtis coefficient is better at using species abundances to capture site differences, which helps deal with the **double-zero problem**.
 
 Below is a function to calculate the Bray-Curtis distance by hand:
 
