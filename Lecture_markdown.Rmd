@@ -212,9 +212,9 @@ Another distance coefficient that is better suited to analyze species abundances
 
 Where:
 
--   W is the sum of the lowest abundances in each species found between sites x1 and x2
--   A is the sum of all abundances in x1
--   B is the sum of all abundances in x2
+-   W is the sum of the lowest abundances in each species found between sites x~1~ and x~2~
+-   A is the sum of all abundances in x~1~
+-   B is the sum of all abundances in x~2~
 
 Using the same data set above, we can calculate the Bray-Curtis coefficient using the vegdist() function in the vegan package:
 
