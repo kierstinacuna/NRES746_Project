@@ -740,17 +740,17 @@ The two most common Constrained Ordination techniques are Redundancy Analysis (R
 
 ## Redundancy Analysis
 
-The Redundancy Analysis models the effect of an explanatory matrix on a **response matrix**. This is an important distinction from the models we've made so far, which have only had one response variable. A summary of the technique is that an ordination is done on a response matrix **Y** to obtain ordination axes that are linear combinations of explanatory matrix **X**. 
+The Redundancy Analysis models the effect of an explanatory matrix on a **response matrix**. This is an important distinction from the models we've made so far, which have only had one response variable.
 
-Like PCA, explanatory variables can be quantitative (centered, standardized, transformed or normalized, and collinearity reduced), qualitative, and binary variables. 
+Like PCA, explanatory variables can be quantitative, qualitative, and/or binary. 
 
 ### How RDA Works
 
-1. Multiple regression, where each object in **Y** is regressed on the explanatory variables **X**, which produces a matrix of fitted values **Y**~***fit***~
+1. The first step involves multiple regression, where each object in the response matrix, **Y**, is regressed on the explanatory variables in **X**, which produces a matrix of fitted values, **Y**~***fit***~.
 
 ![](images/Lab_1.png){Width="60%"}
 
-2. Run a PCA on the matrix of fitted values **Y**~***fit***~, which produces eigenvalues and eigenvectors, which for an RDA are called canonical axes. These axes are stred in a matrix ***Z***, which correspond to the linear combinations of the explanatory variables in ***X***. In analyzing community composition, these canonical axes are interpreted as complex environmental gradients. 
+2. Then, we run a PCA on the matrix of fitted values **Y**~***fit***~, which produces eigenvalues and eigenvectors, which for an RDA are called canonical axes. These axes are stred in a matrix ***Z***, which correspond to the linear combinations of the explanatory variables in ***X***. In analyzing community composition, these canonical axes are interpreted as complex environmental gradients. 
 
 We won't go into Canonical Correspondence Analysis in this lecture but more information can be found [here](https://ordination.okstate.edu/overview.htm#Canonical_Correspondence_Analysis). 
 
