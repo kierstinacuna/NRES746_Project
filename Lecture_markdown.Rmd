@@ -25,7 +25,7 @@ knitr::opts_chunk$set(echo = TRUE)
 5.  Unconstrained Ordination
 6.  Constrained Ordination
 
-R Script for this lab can be found here.
+R Script for this lab can be found [here](Lecture_script.R).
 
 ------------------------------------------------------------------------
 
@@ -77,9 +77,9 @@ This is where multivariate analysis shines! Multivariate analysis is any analysi
 
 So now that we know what kind of questions multivariate analysis can answer, what is Ordination? In very general terms:
 
-**Ordination is a collective term for multivariate techniques which summarize a multidimensional dataset in such a way that when it is projected onto a low dimensional space, any intrinsic pattern the data may possess becomes apparent upon visual inspection** (Pielou, 1984).
+**Ordination is a collective term for multivariate techniques which summarize a multidimensional data set in such a way that when it is projected onto a low dimensional space, any intrinsic pattern the data may possess becomes apparent upon visual inspection** (Pielou, 1984).
 
-Ordination can also be thought of as the ordering of objects characterized by multiple attributes, hence why it is a type of multivariate analysis. In ecological terms, ordination is often used to summarize complicated community data into a low-dimensional ordination space which places similar species and samples close together while less-similar species and samples are further apart. The dimensions of this low-dimension ordination space often represent environmental or variable gradients, the relative importance of which can be quantified to understand how they structure complicated community data.
+Ordination can also be thought of as the ordering of objects characterized by multiple attributes, hence why it is a type of multivariate analysis. In ecological terms, ordination is often used to summarize complicated community data into a low-dimensional ordination space which places similar species and samples are close together while less-similar species and samples are further apart. The dimensions of this low-dimension ordination space often represent environmental or variable gradients, the relative importance of which can be quantified to understand how they structure complicated community data.
 
 Additionally, the results from most ordination techniques can readily be graphed into intuitive interpretations of species-environment relationships.
 
