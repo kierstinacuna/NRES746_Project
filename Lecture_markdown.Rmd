@@ -317,7 +317,7 @@ head(spe.hel)
 
 3.  Compute the Covariance Matrix
 
-Covariance indicates the direction of the linear relationship between two variables. A positive covariance have a positive relationship, while a negative indicates that they do not. Zero indicates no relationship. It is unlike correlation in that it doesn't tell us the strength of the relationship between two variables.
+Covariance indicates the direction of the linear relationship between two variables. A positive covariance indicates a positive relationship, while a negative relationship indicates that they do not. Zero indicates no relationship. It is unlike correlation in that it doesn't tell us the strength of the relationship between two variables.
 ```{r}
   # Compute covarience matrix by hand
 comp_cov <- function(data) {
@@ -345,7 +345,7 @@ head(cov_base_func)
 
 4.  Perform the Eigen-decomposition of the covariance matrix
 
-Eigendecomposition is a fancy way of saying calculating the eigenvectors and eigenvalues of a matrix. The eigenvectors represent the directions in covariance space that capture the maximum amount of variance in the data, and the eigenvalues indicate the amount of variance captured by each eigenvector.
+Eigendecomposition is a fancy way of saying to calculate the eigenvectors and eigenvalues of a matrix. The eigenvectors represent the directions in covariance space that capture the maximum amount of variance in the data, and the eigenvalues indicate the amount of variance captured by each eigenvector.
 
 Visually, you think of an eigenvector below:
 
@@ -379,7 +379,7 @@ eig_vec_1 <- eig_vectors[,1]
 eig_vec_2 <- eig_vectors[,2]
 ```
 
-5.  Show amount of variance contributed by each Principal Component by making a Scree Plot.
+5.  Show amount of variance contributed by each eigenvector/principal components by making a Scree Plot.
 
 ```{r}
   # Calculate the estimated variance for each eigenvalue
@@ -392,7 +392,7 @@ var_per <- data.frame(
           "PC19", "PC20", "PC21", "PC22", "PC23", "PC24", "PC25", "PC26", "PC27"),
   PER = c(e_var) * 100 / sum(e_var) # Calculate the percentage
 )
-  # Scree plot to show amount of variance accounted by each principal component
+  # Scree plot to show amount of variance accounted by each principal components
 barplot(PER ~ PC, data = var_per,
         xlab = "Principal Components",
         ylab = "Percent of Variation %")
@@ -400,7 +400,9 @@ barplot(PER ~ PC, data = var_per,
 
 6.  Selecting Principal Components
 
-It is generally a good idea to select the principal components that explain most of the variance in the data. The most common method is the **Kaiser-Guttman Criterion**, which states that any eigenvector with an eigenvalue greater than the mean eigenvalue should be retained.
+It is generally a good idea to select the principal components that explain most of the variance in the data. Generally, selecting principal components is a subjective process. There is no objectively correct method for choosing principal componentss. However, there are established methods used by community ecologists.
+
+The most common method is the **Kaiser-Guttman Criterion**, which states that any eigenvector with an eigenvalue greater than the mean eigenvalue should be retained.
 
 ```{r}
 eig_val_PC <- data.frame(
@@ -414,7 +416,7 @@ barplot(EV ~ PC, data = eig_val_PC,
 abline(h = mean(eig_values), col = "red")
 ```
 
-Another common method for choosing principal components is the **Broken Stick Model**. It provides "a good combination of simplicity of calculation and accurate evaluation of dimensionality relative to the other statistical approaches" (Jackson 1993). The methods works by keeping "[principal] components that explain more variance than would be expected by randomly dividing the variance into p parts". The "expected proportions" would correspond to a null model that contains uncorrelated (noise) variables. If you plot the eigenvalues of the correlation matrix against the broken-stick proportions, the observed proportions that are higher than the expected proportions indicate which principal components to keep. This methods falls on conservative side of Principal Component selections.
+Another common method for choosing principal components is the **Broken Stick Model**. It provides "a good combination of simplicity of calculation and accurate evaluation of dimensionality relative to the other statistical approaches" (Jackson 1993). The methods works by keeping "[principal] components that explain more variance than would be expected by randomly dividing the variance into *p* parts". The "expected proportions" would correspond to a null model that contains uncorrelated (noise) variables. If you plot the principal component proportions against the broken-stick proportions, the principal component proportions that are higher than the broken stick proportions indicate which principal components to keep. This methods falls on conservative side of Principal Component selections.
 
 ```{r}
 broken_stick <- function(eig_values) {
@@ -427,14 +429,14 @@ broken_stick <- function(eig_values) {
     }
   bsm$prop_var = 100*bsm$prop_var/n
   
-  # Plot Broken Stick Modol Over 
+  # Plot Broken Stick Model Over 
   barplot(t(cbind(100*eig_values/sum(eig_values), bsm$p[n:1])),
         beside=TRUE, 
         main="Broken Stick Model",
         col=c("red","blue"),
         las=2,
         xlab = "Principal Components", ylab = "Percent of Variation (%)")
-  legend("topright", c("Eigenvalues", "Broken stick model"), 
+  legend("topright", c("Observed Principal Components", "Broken stick model"), 
          pch=15,
          col=c("red","blue"), 
          bty="n")
@@ -520,10 +522,12 @@ variable.loads <- data.frame(
   PC02 = eig_vec_2  # Second eigenvector
 )
 head(variable.loads)
+```
 
-# You can also calculate the loading scores for each site, which shows how they are placed in relation to the principal components.
+You can also calculate the loading scores for each site, which shows how they are placed in relation to the principal components.
 
-  # Get site loading scores
+```{r}
+# Get site loading scores
 loading.scores <- as.data.frame(as.matrix(spe.hel) %*% eig_vectors)
 colnames(loading.scores) = c("PC01", "PC02", "PC03", "PC04", "PC05", "PC06","PC07", "PC08", "PC09", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PC16", "PC17", "PC18", "PC19", "PC20", "PC21", "PC22", "PC23", "PC24", "PC25", "PC26", "PC27")
 head(loading.scores)
