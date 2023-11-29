@@ -27,6 +27,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 R Script for this lab can be found [here](Lecture_script.R).
 
+This lecture is adapted from the Quebec Center for Biodiversity Science, R Workshop Series:
+- [Workshop 9: Multivariate Analyses in R](https://r.qcbs.ca/workshop09/book-en/index.html)
+- [Workshop 10: Advanced Multivariate Analyses in R](https://r.qcbs.ca/workshop10/book-en/index.html)
+
 ------------------------------------------------------------------------
 
 # Introduction
@@ -765,11 +769,6 @@ For the lab, we'll go through a Redundancy Analysis on the Doubs fish data set.
 ***
 
 # Sources
-
-What This Lecture is Adapted From
-
-- [Workshop 9: Multivariate Analyses in R](https://r.qcbs.ca/workshop09/book-en/index.html)
-- [Workshop 10: Advanced Multivariate Analyses in R](https://r.qcbs.ca/workshop10/book-en/index.html)
 
 More Information About Ordination 
 
