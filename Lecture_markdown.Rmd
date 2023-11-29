@@ -750,7 +750,7 @@ Like PCA, explanatory variables can be quantitative, qualitative, and/or binary.
 
 ![](images/Lab_1.png){Width="60%"}
 
-2. Then, we run a PCA on the matrix of fitted values **Y**~***fit***~, which produces eigenvalues and eigenvectors, which for an RDA are called canonical axes. These axes are stred in a matrix ***Z***, which correspond to the linear combinations of the explanatory variables in ***X***. In analyzing community composition, these canonical axes are interpreted as complex environmental gradients. 
+2. Then, we run a PCA on the matrix of fitted values **Y**~***fit***~. Just like before, PCA produces eigenvalues and eigenvectors, but in RDA we call these canonical axes. These axes are stored in a matrix ***Z***, which correspond to the linear combinations of the explanatory variables in ***X***. In analyzing community composition, these canonical axes are interpreted as complex environmental gradients. 
 
 We won't go into Canonical Correspondence Analysis in this lecture but more information can be found [here](https://ordination.okstate.edu/overview.htm#Canonical_Correspondence_Analysis). 
 
