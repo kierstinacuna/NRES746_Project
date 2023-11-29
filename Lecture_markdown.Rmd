@@ -604,8 +604,7 @@ The second principal component (PC2) is orthogonal of PC1 and can be interpreted
 
 ### Scaling
 
-One last note is that the biplot function has a scaling argument that allows
-us to change our visualization of the data to allow for different inferences. There is no single way to optimally show objects and variables in a biplot
+One last note is that the biplot function has a scaling argument that allows us to change our visualization of the data to allow for different inferences. There is no single way to optimally show objects and variables in a biplot
 
 Type 2 scaling, which is the default, does not preserve approximation of Euclidean distance among sites. This scaling preserves the correlation between variables by their angles relative to each other. This is the best option if the goal is to focus on the relationships between descriptors.
 
