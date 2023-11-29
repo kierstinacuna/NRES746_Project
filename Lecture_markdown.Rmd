@@ -425,7 +425,6 @@ The Kaiser-Guttman Criterion in this example suggests that we should use the fir
 eig_vec_kgc <- eig_values[eig_values > mean(eig_values)]
 
 sum(var_per$PER[1:length(eig_vec_kgc)])
-
 ```
 
 Another common method for choosing principal components is the **Broken Stick Model**. It provides "a good combination of simplicity of calculation and accurate evaluation of dimensionality relative to the other statistical approaches" (Jackson 1993). The methods works by keeping "[principal] components that explain more variance than would be expected by randomly dividing the variance into *p* parts". The "expected proportions" would correspond to a null model that contains uncorrelated (noise) variables. If you plot the principal component proportions against the broken-stick proportions, the principal component proportions that are higher than the broken stick proportions indicate which principal components to keep. This methods falls on conservative side of Principal Component selections.
