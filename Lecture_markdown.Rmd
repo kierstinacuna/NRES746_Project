@@ -79,7 +79,7 @@ So now that we know what kind of questions multivariate analysis can answer, wha
 
 **Ordination is a collective term for multivariate techniques which summarize a multidimensional data set in such a way that when it is projected onto a low dimensional space, any intrinsic pattern the data may possess becomes apparent upon visual inspection** (Pielou, 1984).
 
-Ordination can also be thought of as the ordering of objects characterized by multiple attributes, hence why it is a type of multivariate analysis. In ecological terms, ordination is often used to summarize complicated community data into a low-dimensional ordination space which places similar species and samples are close together while less-similar species and samples are further apart. The dimensions of this low-dimension ordination space often represent environmental or variable gradients, the relative importance of which can be quantified to understand how they structure complicated community data.
+Ordination can also be thought of as the ordering of objects characterized by multiple attributes, hence why it is a type of multivariate analysis. In ecological terms, ordination is often used to summarize complicated community data into a low-dimensional ordination space which places similar species and samples close together while less-similar species and samples are further apart. The dimensions of this low-dimension ordination space often represent environmental or variable gradients, the relative importance of which can be quantified to understand how they structure complicated community data.
 
 Additionally, the results from most ordination techniques can readily be graphed into intuitive interpretations of species-environment relationships.
 
@@ -143,7 +143,7 @@ The most common way to calculate distance or dissimilarity matrices is by using 
 
 ### Euclidean Distance
 
-The most common distance measure is the **Euclidean distance**, which falls under the category of **Metric** distance coefficients. It's used as the default metric for principal component analysis (PCA). Euclidean distance is a measure of the distance between two points in Euclidean space, which is typically planar and orthogonal. In two dimensions, the Euclidean distance between two points p and q can be calculated using the Pythagorean theorem:
+The most common distance measure is the **Euclidean distance**, which falls under the category of **Metric** distance coefficients. It's used as the default distance metric for principal component analysis (PCA). Euclidean distance is a measure of the distance between two points in Euclidean space, which is typically planar and orthogonal. In two dimensions, the Euclidean distance between two points p and q can be calculated using the Pythagorean theorem:
 
 <center>
 ![](images/Lecture_12.png)
@@ -271,7 +271,7 @@ calc_bc_dist(Y.hmm)
 
 ### Other Distance Coefficients
 
-Besides Euclidean distance, common **Metric** coefficients include **Chord distances** and **Jaccard's coefficient**. Another common **Semimetric coefficient** is **Sørensen's coefficient**. A final group of distance coefficients are **Nonmetric**, one of which is **Mahalanobis distance**. You can find out more about these distance coefficients [here](https://r.qcbs.ca/workshop09/book-en/types-of-distance-coefficients.html). More information about distance coefficients can be found [here](https://www.davidzeleny.net/anadat-r/doku.php/en:similarity)
+Besides Euclidean distance, common **Metric** coefficients include **Chord distances** and **Jaccard's coefficient**. Another common **Semimetric coefficient** is **Sørensen's coefficient**. A final group of distance coefficients are **Nonmetric**, one of which is **Mahalanobis distance**. You can find out more about these distance coefficients [here](https://r.qcbs.ca/workshop09/book-en/types-of-distance-coefficients.html). More information about distance coefficients can be found [here](https://www.davidzeleny.net/anadat-r/doku.php/en:similarity).
 
 ***
 
