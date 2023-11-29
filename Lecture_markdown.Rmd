@@ -713,7 +713,7 @@ With type 2 scaling of a CA biplot, species that are close to one another are li
 
 ## Principal Coordinate Analysis
 
-Principal Coordinate Analysis (PCoA) builds upon PCA and CA by allowing the use of other distance metrics beyond Euclidean and Chi^2^. PCoA is best used when trying to visualize distance between objects or when data sets have more columns than rows. If you use Euclidean distances in a PCoA, its identical to a PCA. If you sue Chi^2^ distances, its identical to a CA.
+Principal Coordinate Analysis (PCoA) builds upon PCA and CA by allowing the use of other distance metrics beyond Euclidean and Chi^2^. PCoA is best used when trying to visualize distance between objects or when data sets have more columns than rows. If you use Euclidean distances in a PCoA, its identical to a PCA. If you use Chi^2^ distances, its identical to a CA.
 
 We'll run a PCoA on the Doubs fish data set below:
 ``` {r}
@@ -748,7 +748,7 @@ data(Doubs)
 species <- Doubs.fish[-8,]
 
 # Apply Helligner transformation
-spe.h <- decostand(species, method = "hellinger")
+spe.h <- vegan::decostand(species, method = "hellinger")
 
 # Run the NMDS
 spe.nmds <- vegan::metaMDS(spe.h,
