@@ -28,6 +28,7 @@ knitr::opts_chunk$set(echo = TRUE)
 R Script for this lab can be found [here](Lecture_script.R).
 
 This lecture is adapted from the Quebec Center for Biodiversity Science, R Workshop Series:
+
 - [Workshop 9: Multivariate Analyses in R](https://r.qcbs.ca/workshop09/book-en/index.html)
 - [Workshop 10: Advanced Multivariate Analyses in R](https://r.qcbs.ca/workshop10/book-en/index.html)
 
@@ -650,11 +651,19 @@ spe.ca <- vegan::cca(species)
 ```
 
 ```{r, fig.height = 6, fig.width = 6}
-# Plot CA
+  # Plot CA
 plot(spe.ca, scaling = 2, type = "none", main = "CA",
      xlab = c("CA1"), ylab = c("CA2"))
 
-points(vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 2), pch = 21, col = "black", bg = "steelblue", cex = 1.2)
+  # Extract Site and Species Scores
+ca.site.scores <- vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 2)
+
+points(ca.site.scores,
+       pch = 21, col = "black", bg = "steelblue", cex = 1.2)
+
+text(ca.site.scores,
+     labels = as.factor(rownames(vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 2))),pos = 1, cex=1,
+                          col = "black")
 
 text(vegan::scores(spe.ca, display = "species", choices = c(1), scaling = 2),
      vegan::scores(spe.ca, display = "species", choices = c(2), scaling = 2),

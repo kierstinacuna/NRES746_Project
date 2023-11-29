@@ -389,8 +389,15 @@ abline(h = mean(eig_vec_ca), col = "red")
 plot(spe.ca, scaling = 2, type = "none", main = "CA",
      xlab = c("CA1"), ylab = c("CA2"))
 
-points(vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 2),
+  # Extract Site and Species Scores
+ca.site.scores <- vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 2)
+
+points(ca.site.scores,
        pch = 21, col = "black", bg = "steelblue", cex = 1.2)
+
+text(ca.site.scores,
+     labels = as.factor(rownames(vegan::scores(spe.ca, display = "sites", choices = c(1, 2), scaling = 2))),pos = 1, cex=1,
+                          col = "black")
 
 text(vegan::scores(spe.ca, display = "species", choices = c(1), scaling = 2),
      vegan::scores(spe.ca, display = "species", choices = c(2), scaling = 2),
