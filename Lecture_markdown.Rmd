@@ -209,7 +209,7 @@ Therefore, Euclidean distance should not be used to compare sites based on speci
 
 ### Bray-Curtis Coefficient
 
-Another distance coefficient that is better suited to analyze species abundances is the Bray-Curtis coefficient. This coefficient falls under the **Semimetric** category of distance coefficients. The coefficient can be calculated:
+Another distance coefficient that is better suited to analyze species abundances is the **Bray-Curtis coefficient**. This coefficient falls under the **Semimetric** category of distance coefficients. The coefficient can be calculated:
 
 ![](images/Lecture_14.png)
 
@@ -219,7 +219,7 @@ Where:
 -   A is the sum of all abundances in x~1~
 -   B is the sum of all abundances in x~2~
 
-Using the same data set above, we can calculate the Bray-Curtis coefficient using the vegdist() function in the vegan package:
+Using the same data set above, we can calculate the **Bray-Curtis coefficient** using the vegdist() function in the vegan package:
 
 ```{r}
 (Y.hmm.BCdist <- vegan::vegdist(Y.hmm, method = "bray", binary = FALSE))
@@ -228,9 +228,9 @@ Using the same data set above, we can calculate the Bray-Curtis coefficient usin
 
 ```
 
-Again, lower numbers indicate higher similarities. In contrast to the Euclidean coefficient, the Bray-Curtis coefficient between site 1 and site 3 indicates that these sites are less similar compared to their relationship with site 2. Therefore, the Bray-Curtis coefficient is better at using species abundances to capture site differences, which helps deal with the **double-zero problem**.
+Again, lower numbers indicate higher similarities. In contrast to the Euclidean coefficient, the **Bray-Curtis coefficient** between site 1 and site 3 indicates that these sites are less similar compared to their relationship with site 2. Therefore, the **Bray-Curtis coefficient** is better at using species abundances to capture site differences, which helps deal with the **double-zero problem**.
 
-Below is a function to calculate the Bray-Curtis distance by hand:
+Below is a function to calculate the **Bray-Curtis coefficient** by hand:
 
 ```{r}
 # Calculate Bray-Curtis coefficient by hand
@@ -733,7 +733,7 @@ ape::biplot.pcoa(spe.bc.pcoa, spe.hel, dir.axis1 = -1, dir.axis2 = -1)
 abline(v = 0, h = 0)
 ```
 
-As you can see, the PCoA that uses Euclidean distance is very similar to the PCA run on the same data. The biplot of the PCoA using the Bray-Curtis distance shows that the site positions are slightly different. Since we are working with a data set that contains lots of zeros, this biplot may be more reliable in allowing us to interpret the relationship of these sites among each other (since the scaling is set to type 1).
+As you can see, the PCoA that uses Euclidean distance is very similar to the PCA run on the same data. The biplot of the PCoA using the **Bray-Curtis distance** shows that the site positions are slightly different. Since we are working with a data set that contains lots of zeros, this biplot may be more reliable in allowing us to interpret the relationship of these sites among each other (since the scaling is set to type 1).
 
 
 ## Nonmetric MultiDimensional Scaling
