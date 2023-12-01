@@ -18,6 +18,9 @@ In contrast, constrained ordination methods do require prior knowledge and/or as
   
 What do we mean by prior knowledge or assumptions about the data? Typically in constrained ordination, we are trying to identify the relationships between a matrix of response variables and a matrix of predictor variables. We partition the variation within the response variables into two parts: the part that *can* be explained by predictor variables, and the part that *cannot* be explained by predictor variables. The variation from the response variables that *can* be explained by the predictor variables is used to create our *constrained ordination axes*. These axes are *constrained* by the response variables.
 
+<!-- MG Note: I think there should be an example of an interpretation of an RDA plot from a paper to set up the last question about how to interpret an RDA plot. I don't know how to interpret an RDA plot compared to a PCA, PCoA, or CA plot (and I don't cover that in the lecture) so having an example would be a good way to help them interpret the plot they make in the last question -->
+
+
 
 ## RDA Review
 
@@ -29,6 +32,8 @@ The basic steps of redundancy analysis (RDA) are:
     ![](images/Lab_2.png)
 
 Of course, the actual RDA function from the vegan package is a bit more sophisticated than this. It involves QR decomposition and some complex matrix algebra. But, today we will focus on using RDA, rather than getting into the weeds with matrix math.
+
+<!-- MG Note: I think you should briefly explain QR decomposition or provide a resource to what QR decomposition is. -->
 
 ### Doubs Fish Data
 

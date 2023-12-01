@@ -33,18 +33,25 @@ RDA_prep <- function(x, y){
 }
 
 # Use the function to prepare our data for RDA
-data <- RDA_prep(         )
+data <- RDA_prep(x = ,
+                 y =
+                   )
 
 # Exercise 2 ----
 # Step 1: Create a global RDA using all the predictor variables, and a null RDA 
 #   using none of the predictor variables.
-rda_global <- rda(          )
+rda_global <- vegan::rda(          )
 
-rda_null <- rda(          )  
+### MG Note: I would have an example of the syntax used for an RDA function so they don't have to struggle looking for an example ###
+
+rda_null <- vegan::rda(          )  
 
 # Step 2: Use the ordiR2step function for variable selection. Define the object as the 
 #   null rda, and the scope as the global rda.
-selection <- ordiR2step(         )
+selection <- vegan::ordiR2step(         )
+
+### MG Note: I would also have an example of the syntax used for an ordir2step function so they don't have to struggle looking for an example ###
+
 
 # Step 3: View the results. The formula in the "Call" contains the variables that 
 #   ordiR2step selected.
@@ -52,15 +59,18 @@ selection
 
 # Exercise 3 ----
 # Step 1: Use the rda function to run an rda on the variables selected in exercise 2
-rda_final <- rda(     )
+rda_final <- vegan::rda(     )
 
 # Step 2: Visualize the rda using the ordiplot function
-ordiplot(     )
+vegan::ordiplot(     )
+
+### MG Note: maybe have a comment above hinting at where you can find the ordiplot() syntax? Such as:
+# Hint: look in the lecture script for ordiplot function syntax
 
 # Step 3: Calculate the adjusted R-squared and p-values for the rda
-r2 <- RsquareAdj(     )
+r2 <- vegan::RsquareAdj(     )
 
-p <- anova.cca(     )
+p <- vegan::anova.cca(     )
 
 # Answers ----
 ## Exercise 1 ----
@@ -87,7 +97,7 @@ RDA_prep <- function(x, y){
 
 # Compare our answer to the vegan::decostand answer
 our_hell <- RDA_prep(vars, species)$y
-vegan_hell <- decostand(species, "hellinger")
+vegan_hell <- vegan::decostand(species, "hellinger")
 which(our_hell != vegan_hell) #they're the same!
 
 # Use our function to prepare our data for RDA
@@ -97,12 +107,12 @@ data <- RDA_prep(vars, species)
 # Step 1: Use the RDA_prep function to prepare the data. Then, create a global RDA 
 #   using all the predictor variables, and a null RDA using none of the predictor variables.
 
-rda_global <- rda(data$y ~ ., data=data$x)
+rda_global <- vegan::rda(data$y ~ ., data=data$x)
 
-rda_null <- rda(data$y ~ 1, data=data$x)
+rda_null <- vegan::rda(data$y ~ 1, data=data$x)
 
 # Step 2: Use the ordiR2step function for variable selection
-selection <- ordiR2step(object = rda_null, scope = rda_global)
+selection <- vegan::ordiR2step(object = rda_null, scope = rda_global)
 
 # Step 3: View the results. The formula in the "Call" contains the variables that 
 #   ordiR2step selected.
@@ -110,13 +120,13 @@ selection
 
 ## Exercise 3 ----
 # Step 1: Use the rda function to run an rda on the variables selected in exercise 2
-rda_final <- rda(data$y ~ DFS + oxy + bdo + slo + Lat, data=data$x)
+rda_final <- vegan::rda(data$y ~ DFS + oxy + bdo + slo + Lat, data=data$x)
 summary(rda_final)
 
 # Step 2: Visualize the rda using the ordiplot function
-ordiplot(rda_final, type = "text")
+vegan::ordiplot(rda_final, type = "text")
 
 # Step 3: Calculate the adjusted R-squared and p-values for the rda
-r2 <- RsquareAdj(rda_final)
+r2 <- vegan::RsquareAdj(rda_final)
 
-p <- anova.cca(rda_final, by="term")
+p <- vegan::anova.cca(rda_final, by="term")
