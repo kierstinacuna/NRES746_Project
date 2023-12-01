@@ -11,7 +11,7 @@
 
 <meta name="author" content="Kierstin Acuna &amp; Martin Genova" />
 
-<meta name="date" content="2023-11-27" />
+<meta name="date" content="2023-12-01" />
 
 <title>Ordination Lab</title>
 
@@ -352,11 +352,36 @@ display: none;
 
 <h1 class="title toc-ignore">Ordination Lab</h1>
 <h4 class="author">Kierstin Acuna &amp; Martin Genova</h4>
-<h4 class="date">2023-11-27</h4>
+<h4 class="date">2023-12-01</h4>
 
 </div>
 
 
+<div id="lecture-review" class="section level2">
+<h2>Lecture Review</h2>
+<p>In last week’s lecture, we covered the basics of ordination. We
+reviewed a bit of matrix algebra, learned to compute the most common
+distance metrics (Euclidean and Bray-Curtis), and covered unconstrained
+and constrained ordination techniques.</p>
+<p>As a reminder, unconstrained ordination methods do not require any
+prior knowledge or assumptions about the data, and they are primarily
+used for visualization. These methods include PCA, PCoA, CA, and
+NMDS.</p>
+<p>In contrast, constrained ordination methods do require prior
+knowledge and/or assumptions about the data. Constrained ordination
+methods combine concepts from ordination and regression to test
+hypotheses. These methods include RDA and CCA.</p>
+<p>What do we mean by prior knowledge or assumptions about the data?
+Typically in constrained ordination, we are trying to identify the
+relationships between a matrix of response variables and a matrix of
+predictor variables. We partition the variation within the response
+variables into two parts: the part that <em>can</em> be explained by
+predictor variables, and the part that <em>cannot</em> be explained by
+predictor variables. The variation from the response variables that
+<em>can</em> be explained by the predictor variables is used to create
+our <em>constrained ordination axes</em>. These axes are
+<em>constrained</em> by the response variables.</p>
+</div>
 <div id="rda-review" class="section level2">
 <h2>RDA Review</h2>
 <p>The basic steps of redundancy analysis (RDA) are:</p>
@@ -380,9 +405,8 @@ Doubs.env and Doubs.geo are datasets containing attributes on each site,
 such as longitude and latitude, slope, pH, and dissolved oxygen
 concentration.</p>
 <pre class="r"><code># Load libraries ----
-library(codep)</code></pre>
-<pre><code>## Warning: package &#39;codep&#39; was built under R version 4.3.2</code></pre>
-<pre class="r"><code>library(vegan)
+library(codep)
+library(vegan)
 
 # Load Doubs fish Data ----
 data(Doubs)
@@ -452,9 +476,10 @@ double-zero problem. The hellinger transformation takes raw abundance
 values, and transforms them into the square root of the relative
 abundance. The formula for the hellinger transformation is:<br />
 <img src="data:image/png;base64,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" /></p>
-<p>where j represents species and i represents sites (yij represents
-species j in site i). yi. represents the summed abundance of all species
-in site i.</p>
+<p>where <em>j</em> represents species and <em>i</em> represents sites
+(<em>y<sub>ij</sub></em> represents species <em>j</em> in site
+<em>i</em>). <em>y<sub>i.</sub></em> represents the summed abundance of
+all species in site <em>i</em>.</p>
 <p>Write a function called RDA_prep() that uses the hellinger
 transformation and the scale function to prepare the data for RDA. This
 function should be specified as follows:</p>
@@ -493,8 +518,11 @@ data we have at this model!</p>
 variable selection. The concept is similar to the MuMIn::dredge()
 function. Essentially, it takes a null model and a global model, and
 then adds predictor variables from the global model to the null model
-stepwise. If a predictor variable increases the adjusted R2 value, it
-keeps it.</p>
+stepwise. If a predictor variable increases the adjusted-R<sup>2</sup>
+value, it keeps it. This works because the adjusted-R<sup>2</sup> value
+calculation contains a penalty for the number of parameters fit, meaning
+that adding more parameters does not alwasy increase the
+adjusted-R<sup>2</sup>.</p>
 <p>The two main arguments we need to specify for the ordiR2step()
 function are object and scope. Object is the null model we want to add
 to, and scope is the fully specified model we want to pull predictor
@@ -512,10 +540,28 @@ ordiR2step (or dredge) for variable selection?</li>
 <div id="exercise-3" class="section level2">
 <h2>Exercise 3</h2>
 <p>So far, we’ve scaled and transferred our data, and used a variable
-selection tool to narrow down our predictor variables. In this last
-exercise, we will run an RDA on our selected variables, plot the output,
-and assess its R-squared value and significance. After completing these
-tasks, answer the following questions in your word document:</p>
+selection tool to narrow down our predictor variables. Say we want to
+test the hypothesis that our selected predictor variables are impacting
+the fish community in the Doubs river. There are functions that allow us
+to obatin R<sup>2</sup> and p-values from an RDA!</p>
+<p>The RsquareAdj() function extracts the percent of the variation in
+the response matrix (Doubs fish community) explained by the predictor
+matrix (environmental variables). This is also called the
+<em>constrained variance</em>. Then, it adjusts the constrained variance
+for the number of predictor variables used in the model to obtain the
+adjusted-R<sup>2</sup> value.</p>
+<p>The anova.cca() function allows us to test the significance of the
+predictor variables used in our RDA by implementing an ANOVA-like
+permutation test. Essentially, if the argument ‘by = “terms”’ is
+specified, the function will sequentially assess if adding each
+predictor variable makes a significant difference in the amount of
+variation explained compared to a null model. It’s important to note
+that the order of terms will affect their significance, as they are
+assessed sequentially from first to last.</p>
+<p>In this last exercise, we will run an RDA on our selected variables,
+plot the output, and assess its R-squared value and significance. After
+completing these tasks, answer the following questions in your word
+document:</p>
 <ul>
 <li>What values did you get for the adjusted R-squared and
 p-values?<br />

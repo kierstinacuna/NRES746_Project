@@ -8,6 +8,16 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+## Lecture Review  
+  
+In last week's lecture, we covered the basics of ordination. We reviewed a bit of matrix algebra, learned to compute the most common distance metrics (Euclidean and Bray-Curtis), and covered unconstrained and constrained ordination techniques.  
+  
+As a reminder, unconstrained ordination methods do not require any prior knowledge or assumptions about the data, and they are primarily used for visualization. These methods include PCA, PCoA, CA, and NMDS.  
+  
+In contrast, constrained ordination methods do require prior knowledge and/or assumptions about the data. Constrained ordination methods combine concepts from ordination and regression to test hypotheses. These methods include RDA and CCA.  
+  
+What do we mean by prior knowledge or assumptions about the data? Typically in constrained ordination, we are trying to identify the relationships between a matrix of response variables and a matrix of predictor variables. We partition the variation within the response variables into two parts: the part that *can* be explained by predictor variables, and the part that *cannot* be explained by predictor variables. The variation from the response variables that *can* be explained by the predictor variables is used to create our *constrained ordination axes*. These axes are *constrained* by the response variables.
+
 
 ## RDA Review
 
@@ -66,7 +76,7 @@ Before we can perform an RDA, we need to center and scale the predictor variable
 We can use the hellinger-transformation to account for the double-zero problem. The hellinger transformation takes raw abundance values, and transforms them into the square root of the relative abundance. The formula for the hellinger transformation is:\
 ![](images/Lab_4.png)
 
-where j represents species and i represents sites (yij represents species j in site i). yi. represents the summed abundance of all species in site i.
+where *j* represents species and *i* represents sites (*y~ij~* represents species *j* in site *i*). *y~i.~* represents the summed abundance of all species in site *i*.
 
 Write a function called RDA_prep() that uses the hellinger transformation and the scale function to prepare the data for RDA. This function should be specified as follows:
 
@@ -96,7 +106,7 @@ After you've made your function, use it to prepare the Doubs fish data for RDA!
 
 Now that our data is ready, let's practice using RDA for variable selection! In real life when we are creating models for inference, we should always select variables based on ecological reasoning. But since none of us work on fish in the Doubs river, and we're just trying to get some practice using these functions, we're just going to throw all the data we have at this model!
 
-The ordiR2step() function from the vegan package can help us with variable selection. The concept is similar to the MuMIn::dredge() function. Essentially, it takes a null model and a global model, and then adds predictor variables from the global model to the null model stepwise. If a predictor variable increases the adjusted R2 value, it keeps it.
+The ordiR2step() function from the vegan package can help us with variable selection. The concept is similar to the MuMIn::dredge() function. Essentially, it takes a null model and a global model, and then adds predictor variables from the global model to the null model stepwise. If a predictor variable increases the adjusted-R^2^ value, it keeps it. This works because the adjusted-R^2^ value calculation contains a penalty for the number of parameters fit, meaning that adding more parameters does not alwasy increase the adjusted-R^2^.
 
 The two main arguments we need to specify for the ordiR2step() function are object and scope. Object is the null model we want to add to, and scope is the fully specified model we want to pull predictor variables from.
 
@@ -107,7 +117,13 @@ For this exercise, use the rda() function to create null and global models. Then
 
 ## Exercise 3
 
-So far, we've scaled and transferred our data, and used a variable selection tool to narrow down our predictor variables. In this last exercise, we will run an RDA on our selected variables, plot the output, and assess its R-squared value and significance. After completing these tasks, answer the following questions in your word document:
+So far, we've scaled and transferred our data, and used a variable selection tool to narrow down our predictor variables. Say we want to test the hypothesis that our selected predictor variables are impacting the fish community in the Doubs river. There are functions that allow us to obatin R^2^ and p-values from an RDA!  
+  
+The RsquareAdj() function extracts the percent of the variation in the response matrix (Doubs fish community) explained by the predictor matrix (environmental variables). This is also called the *constrained variance*. Then, it adjusts the constrained variance for the number of predictor variables used in the model to obtain the adjusted-R^2^ value.  
+  
+The anova.cca() function allows us to test the significance of the predictor variables used in our RDA by implementing an ANOVA-like permutation test. Essentially, if the argument 'by = "terms"' is specified, the function will sequentially assess if adding each predictor variable makes a significant difference in the amount of variation explained compared to a null model. It's important to note that the order of terms will affect their significance, as they are assessed sequentially from first to last. 
+
+In this last exercise, we will run an RDA on our selected variables, plot the output, and assess its R-squared value and significance. After completing these tasks, answer the following questions in your word document:
 
 -   What values did you get for the adjusted R-squared and p-values?\
 -   Are there any conclusions you can draw from your RDA plot?
