@@ -6,7 +6,7 @@
 
 # Load libraries ----
 library(codep)
-library (vegan)
+library(vegan)
 
 # Load Doubs fish Data ----
 data(Doubs)
