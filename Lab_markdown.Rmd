@@ -31,9 +31,8 @@ The basic steps of redundancy analysis (RDA) are:
 2.  Perform a PCA on the model predictions\
     ![](images/Lab_2.png)
 
-Of course, the actual RDA function from the vegan package is a bit more sophisticated than this. It involves QR decomposition and some complex matrix algebra. But, today we will focus on using RDA, rather than getting into the weeds with matrix math.
-
-<!-- MG Note: I think you should briefly explain QR decomposition or provide a resource to what QR decomposition is. -->
+Of course, the actual RDA function from the vegan package is a bit more sophisticated than this. It involves [QR decomposition](https://en.wikipedia.org/wiki/QR_decomposition) and some complex matrix algebra. But, today we will focus on using RDA, rather than getting into the weeds with matrix math.  
+  
 
 ### Doubs Fish Data
 
@@ -111,7 +110,7 @@ After you've made your function, use it to prepare the Doubs fish data for RDA!
 
 Now that our data is ready, let's practice using RDA for variable selection! In real life when we are creating models for inference, we should always select variables based on ecological reasoning. But since none of us work on fish in the Doubs river, and we're just trying to get some practice using these functions, we're just going to throw all the data we have at this model!
 
-The ordiR2step() function from the vegan package can help us with variable selection. The concept is similar to the MuMIn::dredge() function. Essentially, it takes a null model and a global model, and then adds predictor variables from the global model to the null model stepwise. If a predictor variable increases the adjusted-R^2^ value, it keeps it. This works because the adjusted-R^2^ value calculation contains a penalty for the number of parameters fit, meaning that adding more parameters does not always increase the adjusted-R^2^.
+The ordiR2step() function from the vegan package can help us with variable selection. The concept is similar to the [MuMIn::dredge() function](https://www.rdocumentation.org/packages/MuMIn/versions/1.47.5/topics/dredge). Essentially, it takes a null model and a global model, and then adds predictor variables from the global model to the null model stepwise. If a predictor variable increases the adjusted-R^2^ value, it keeps it. This works because the adjusted-R^2^ value calculation contains a penalty for the number of parameters fit, meaning that adding more parameters does not always increase the adjusted-R^2^.
 
 The two main arguments we need to specify for the ordiR2step() function are object and scope. Object is the null model we want to add to, and scope is the fully specified model we want to pull predictor variables from.
 
@@ -122,7 +121,7 @@ For this exercise, use the rda() function to create null and global models. Then
 
 ## Exercise 3
 
-So far, we've scaled and transformed our data, and used a variable selection tool to narrow down our predictor variables. Say we want to test the hypothesis that our selected predictor variables are impacting the fish community in the Doubs river. There are functions that allow us to obatin R^2^ and p-values from an RDA!  
+So far, we've scaled and transformed our data, and used a variable selection tool to narrow down our predictor variables. Say we want to test the hypothesis that our selected predictor variables are impacting the fish community in the Doubs river. There are functions that allow us to obtain R^2^ and p-values from an RDA!  
   
 The RsquareAdj() function extracts the percent of the variation in the response matrix (Doubs fish community) explained by the predictor matrix (environmental variables). This is also called the *constrained variance*. Then, it adjusts the constrained variance for the number of predictor variables used in the model to obtain the adjusted-R^2^ value.  
   
@@ -132,6 +131,7 @@ In this last exercise, we will run an RDA on our selected variables, plot the ou
 
 -   What values did you get for the adjusted-R^2^ and p-values?\
 -   Are there any conclusions you can draw from your RDA plot?  
+
   
   
   
